@@ -1,0 +1,9 @@
+{
+  "name": "toptal-react-academy",
+  "version": "1.0.0",
+  "description": "Toptal React Academy project",
+  "main": "index.js",
+  "repository": "https://bitbucket.org/grekinsky/toptal-react-academy",
+  "author": "Greco Rubio <greco@toptal.com>",
+  "license": "MIT"
+}
