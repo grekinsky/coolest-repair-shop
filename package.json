@@ -6,11 +6,26 @@
   "repository": "https://bitbucket.org/grekinsky/toptal-react-academy",
   "author": "Greco Rubio <greco@toptal.com>",
   "license": "MIT",
+  "scripts": {
+    "clean-dist": "rimraf dist",
+    "copy-files": "cpy src/index.html dist && cpy src/app.js dist/assets",
+    "clean-and-copy": "npm run clean-dist && npm run copy-files",
+    "prebuild": "npm run clean-and-copy",
+    "dev": "npm run prebuild && NODE_ENV=localhost nodemon server/index.js --watch server",
+    "start": "npm run prebuild && NODE_ENV=production node server/index.js"
+  },
   "devDependencies": {
+    "cpy-cli": "^1.0.1",
     "eslint": "^4.6.1",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-react": "^7.1.0",
+    "nodemon": "^1.12.0",
+    "rimraf": "^2.6.1"
+  },
+  "dependencies": {
+    "compression": "^1.7.0",
+    "express": "^4.15.4"
   }
 }
