@@ -1,0 +1,22 @@
+{
+  "presets": [
+      ["env", {
+        "targets": {
+          "browsers": [
+            "ie >= 10",
+            "edge >= 13",
+            "chrome >= 55",
+            "firefox >= 50",
+            "safari >= 9"
+          ]
+        },
+        "modules": false
+      }],
+      "react"
+    ],
+    "plugins": [
+      "react-hot-loader/babel",
+      "transform-runtime",
+      "transform-object-rest-spread"
+    ]
+}

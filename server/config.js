@@ -1,15 +1,32 @@
 const defaults = {
+  host: 'localhost',
   port: process.env.PORT || 5000,
+  devTool: 'source-map',
+  minified: false,
+  devServer: false,
 };
 
 const applyDefaults = obj => Object.assign({}, defaults, obj);
-
 const environment = {
-  localhost: applyDefaults({
+  local: applyDefaults({
+    // local config
+    host: 'localhost',
     port: 5000,
+    devTool: 'inline-source-map',
+    minified: false,
+    devServer: true,
+  }),
+  development: applyDefaults({
+    // development config
+    devTool: 'source-map',
+    minified: false,
+    devserver: false,
   }),
   production: applyDefaults({
-    // minify: true, // TODO: when webpack's ready
+    // production config
+    devTool: false,
+    minified: true,
+    devServer: false,
   }),
 };
 
