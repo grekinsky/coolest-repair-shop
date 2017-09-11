@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+
+# Productive files
+/dist
+
+# Dependency directory
+/node_modules
+
+# OSX files
+.DS_Store
+
+# Editors
+.idea/
