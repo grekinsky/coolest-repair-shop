@@ -11,13 +11,6 @@ const commonActions = {
   clearError: () => ({
     type: 'CLEAR_ERROR',
   }),
-  setName: name => ({
-    type: 'SET_NAME',
-    name,
-  }),
-  clearName: () => ({
-    type: 'CLEAR_NAME',
-  }),
 };
 
 export default commonActions;

@@ -1,6 +1,7 @@
 // App State
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
+import { firebaseStateReducer } from 'react-redux-firebase';
 
 const error = (state = null, action) => {
   switch (action.type) {
@@ -16,21 +17,10 @@ const error = (state = null, action) => {
   }
 };
 
-const name = (state = 'John Doe', action) => {
-  switch (action.type) {
-    case 'SET_NAME':
-      return action.name;
-    case 'CLEAR_NAME':
-      return '';
-    default:
-      return state;
-  }
-};
-
 const app = combineReducers({
   error,
-  name,
   routing: routerReducer,
+  firebase: firebaseStateReducer,
 });
 
 export default app;
