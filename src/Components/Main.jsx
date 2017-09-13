@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Dashboard from './Dashboard';
+import Login from './Login';
 
 const Main = ({
   store,
@@ -11,7 +12,10 @@ const Main = ({
 }) => (
   <Provider store={store}>
     <Router history={history}>
-      <Route path="/" component={Dashboard} />
+      <div>
+        <Route exact path="/" component={Dashboard} />
+        <Route exact path="/login" component={Login} />
+      </div>
     </Router>
   </Provider>
 );

@@ -7,7 +7,17 @@ import appState from './reducers';
 import { fbConfig } from './config/constants';
 
 const createAppStore = (initialState, history) => {
-  const rrfConfig = { userProfile: 'users' }; // react-redux-firebase config
+  const rrfConfig = {
+    userProfile: 'users',
+    profileParamsToPopulate: [
+      ['role:roles'], // populates user's role with matching role object from roles
+    ],
+    profileFactory: user => ({
+      email: user.email || user.providerData[0].email,
+      role: user.role || 'user',
+      providerData: user.providerData,
+    }),
+  }; // react-redux-firebase config
   // initialize firebase instance
   const firebaseApp = firebase.initializeApp(fbConfig);
 
