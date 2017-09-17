@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux';
 import firebase from 'firebase';
-import { reactReduxFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import appState from './reducers';
 import { fbConfig } from './config/constants';
 
@@ -12,11 +12,15 @@ const createAppStore = (initialState, history) => {
     profileParamsToPopulate: [
       ['role:roles'], // populates user's role with matching role object from roles
     ],
-    profileFactory: user => ({
-      email: user.email || user.providerData[0].email,
-      role: user.role || 'user',
-      providerData: user.providerData,
-    }),
+    profileFactory: (user) => {
+      console.log(user); // eslint-disable-line
+      return {
+        email: user.email || user.providerData[0].email,
+        role: user.role || 'user',
+        providerData: user.providerData,
+        displayName: user.displayName || user.providerData[0].displayName,
+      };
+    },
   }; // react-redux-firebase config
   // initialize firebase instance
   const firebaseApp = firebase.initializeApp(fbConfig);
@@ -30,7 +34,7 @@ const createAppStore = (initialState, history) => {
     appState,
     initialState,
     applyMiddleware(
-      thunk,
+      thunk.withExtraArgument(getFirebase),
       routerMiddleware(history),
     ),
   );

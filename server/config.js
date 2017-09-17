@@ -1,6 +1,6 @@
 const defaults = {
   host: 'localhost',
-  port: process.env.PORT || 5000,
+  port: process.env.PORT || 3000,
   devTool: 'source-map',
   minified: false,
   devServer: false,
@@ -11,7 +11,7 @@ const environment = {
   local: applyDefaults({
     // local config
     host: 'localhost',
-    port: 5000,
+    port: 3000,
     devTool: 'inline-source-map',
     minified: false,
     devServer: true,

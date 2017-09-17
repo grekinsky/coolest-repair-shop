@@ -7,27 +7,36 @@ import { firebaseConnect, isLoaded } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import { NavLink } from 'react-router-dom';
 import { socialProviders } from '../../config/constants';
-// import classNames from 'classnames/bind';
-// import styles from './Login.css';
 
-// const cx = classNames.bind(styles);
-
-class Login extends Component {
+class Signup extends Component {
   constructor(props) {
     super(props);
     this.socialProviderLogin = this.socialProviderLogin.bind(this);
-    this.loginWithCredentials = this.loginWithCredentials.bind(this);
+    this.signUpWithCredentials = this.signUpWithCredentials.bind(this);
   }
   componentWillReceiveProps({ auth, goTo }) {
     if (auth && auth.uid) {
       goTo('/');
     }
   }
-  async loginWithCredentials({ email, password }) {
+  async signUpWithCredentials({ displayName, email, password, rePassword }) {
+    if (!(displayName && email && password && rePassword)) {
+      debugger; // eslint-disable-line
+      console.error('All fields are required.');
+      return false;
+    }
+    if (password !== rePassword) {
+      console.error('Passwords don\'t match');
+      return false;
+    }
     try {
-      await this.props.firebase.login({ email, password });
+      await this.props.firebase.createUser({
+        email,
+        password,
+      });
+      await this.props.firebase.updateProfile({ displayName });
     } catch (e) {
-      console.log('there was an error', e);
+      console.error('there was an error', e);
       console.log('error prop:', this.props.authError); // thanks to connect
     }
     return true;
@@ -58,28 +67,34 @@ class Login extends Component {
 
     return (
       <div>
-        <h1>Login page</h1>
+        <h1>Signup page</h1>
         <form onSubmit={(e) => {
           e.preventDefault();
-          this.loginWithCredentials({
+          this.signUpWithCredentials({
+            displayName: this.displayName.value,
             email: this.email.value,
             password: this.password.value,
+            rePassword: this.rePassword.value,
           });
         }}
         >
           <fieldset>
             <dl>
+              <dt>Display name:</dt>
+              <dd><input type="text" ref={(el) => { this.displayName = el; }} /></dd>
               <dt>E-mail:</dt>
               <dd><input type="text" ref={(el) => { this.email = el; }} /></dd>
               <dt>Password:</dt>
               <dd><input type="password" ref={(el) => { this.password = el; }} /></dd>
+              <dt>Re-type password:</dt>
+              <dd><input type="password" ref={(el) => { this.rePassword = el; }} /></dd>
               <dt />
               <dd><input type="submit" defaultValue="Sign in" /></dd>
             </dl>
           </fieldset>
         </form>
         <p>
-          <NavLink exact to="/signup">{'Don\'t have an account yet?'}</NavLink>
+          <NavLink exact to="/login">{'I already have an account'}</NavLink>
         </p>
         <p>Or choose your preferred method:</p>
         <ul>
@@ -94,22 +109,23 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
+Signup.propTypes = {
   firebase: PropTypes.shape({
     login: PropTypes.func,
+    createUser: PropTypes.func,
+    updateProfile: PropTypes.func,
   }).isRequired,
   auth: PropTypes.shape({
     displayName: PropTypes.string,
   }).isRequired,
   authError: PropTypes.shape({
     message: PropTypes.string,
-  }).isRequired,
-  goTo: PropTypes.func,
+  }),
+  goTo: PropTypes.func.isRequired,
 };
 
-Login.defaultProps = {
+Signup.defaultProps = {
   authError: null,
-  redirectToHome: () => {},
   goTo: () => {},
 };
 
@@ -126,4 +142,4 @@ export default compose(
       authError,
       auth,
     }), mapDispatchToProps),
-)(Login);
+)(Signup);
