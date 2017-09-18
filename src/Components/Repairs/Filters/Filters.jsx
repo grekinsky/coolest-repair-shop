@@ -43,7 +43,7 @@ const Filters = ({ routing, goTo }) => {
       <select
         onChange={
           (e) => {
-            const selectedValue = e.target.options[e.target.selectedIndex].value;
+            const selectedValue = e.target.value;
             if (!selectedValue) {
               goTo({
                 pathname: '/repairs',
