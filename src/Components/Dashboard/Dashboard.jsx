@@ -39,7 +39,13 @@ class Dashboard extends Component {
         <p><button onClick={this.logout}>Log out</button></p>
         <Switch>
           <Route exact path="/repairs" component={Repairs} />
-          <Route exact path="/repairs/:id" component={RepairDetail} />
+          <Route
+            exact
+            path="/repairs/:id"
+            render={({ match }) => (
+              <RepairDetail id={match.params.id} />
+            )}
+          />
           <Redirect exact from="/" to="/repairs" />
         </Switch>
       </div>

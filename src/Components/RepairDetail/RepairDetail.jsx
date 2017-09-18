@@ -52,7 +52,7 @@ RepairDetail.defaultProps = {
 };
 
 export default compose(
-  firebaseConnect(({ match: { params: { id } } }) => [
+  firebaseConnect(({ id }) => [
     {
       path: `/repairs/${id}`,
       storeAs: 'repairDetail',
