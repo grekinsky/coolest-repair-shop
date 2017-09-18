@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import { firebaseConnect, populate } from 'react-redux-firebase';
+import { firebaseConnect } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Repairs.css';
 import { RepairList } from '../../models';
 import repairActions from '../../actions/repairActions';
 import UserSelector from '../UserSelector';
+import { getVisibleRepairs } from '../../reducers';
+import Filters from './Filters';
 
 const cx = classNames.bind(styles);
 
@@ -108,6 +110,7 @@ class Repairs extends Component {
     return (
       <div className={cx('Repairs')}>
         <h2>Repairs</h2>
+        <Filters />
         <table className={cx('Repairs-table')}>
           <thead>
             <tr>
@@ -135,7 +138,7 @@ class Repairs extends Component {
                   <td>{repair.status}</td>
                   <td>
                     {repair.user !== '0'
-                      ? repair.user.displayName
+                      ? repair.user
                       : '(not assigned)'}
                   </td>
                   <td>
@@ -203,8 +206,8 @@ export default compose(
     },
   ]),
   connect(
-    ({ firebase }) => ({
-      repairs: populate(firebase, 'repairList', populates),
+    ({ firebase }, { filters }) => ({
+      repairs: getVisibleRepairs(firebase.data.repairList, filters),
       auth: firebase.auth,
     }),
     mapDispatchToProps,

@@ -1,0 +1,8 @@
+.Filters {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.Filters-item--active {
+  font-weight: bold;
+}

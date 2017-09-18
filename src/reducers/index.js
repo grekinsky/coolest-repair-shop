@@ -23,4 +23,66 @@ const app = combineReducers({
   firebase: firebaseStateReducer,
 });
 
+const filterByStatus = (repairs, status) => {
+  if (!(repairs && status)) return repairs;
+  const filteredData = {};
+  switch (status) {
+    case 'complete':
+      Object.keys(repairs).map((rKey) => {
+        const r = repairs[rKey];
+        if (r.status === 'done') filteredData[rKey] = r;
+        return null;
+      });
+      return filteredData;
+    case 'incomplete':
+      Object.keys(repairs).map((rKey) => {
+        const r = repairs[rKey];
+        if (r.status !== 'approved' && r.status !== 'done') filteredData[rKey] = r;
+        return null;
+      });
+      return filteredData;
+    default:
+      return repairs;
+  }
+};
+
+const filterByDateTime = (repairs, dateFrom, timeFrom, dateTo, timeTo) => {
+  if (!(repairs && dateFrom && timeFrom && dateTo && timeTo)) return repairs;
+  const filteredData = {};
+  Object.keys(repairs).map((rKey) => {
+    const r = repairs[rKey];
+    if ((r.date >= dateFrom && r.time >= timeFrom)
+      && (r.date <= dateTo && r.time <= timeTo)
+    ) filteredData[rKey] = r;
+    return null;
+  });
+  return filteredData;
+};
+
+const filterByUser = (repairs, user) => {
+  if (!(repairs && user)) return repairs;
+  const filteredData = {};
+  Object.keys(repairs).map((rKey) => {
+    const r = repairs[rKey];
+    if (r.user === user) filteredData[rKey] = r;
+    return null;
+  });
+  return filteredData;
+};
+
+export const getVisibleRepairs = (repairs, filters) => {
+  if (!(repairs && filters)) return repairs;
+  let filteredData = repairs;
+  filteredData = filterByStatus(filteredData, filters.status);
+  filteredData = filterByDateTime(
+    filteredData,
+    filters.dateFrom,
+    filters.timeFrom,
+    filters.dateTo,
+    filters.timeTo,
+  );
+  filteredData = filterByUser(filteredData, filters.user);
+  return filteredData;
+};
+
 export default app;

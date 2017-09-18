@@ -6,6 +6,7 @@ import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import classNames from 'classnames/bind';
+import qs from 'query-string';
 import styles from './Dashboard.css';
 import Repairs from '../Repairs';
 import RepairDetail from '../RepairDetail';
@@ -38,12 +39,22 @@ class Dashboard extends Component {
         <h1>Hello {displayName}!</h1>
         <p><button onClick={this.logout}>Log out</button></p>
         <Switch>
-          <Route exact path="/repairs" component={Repairs} />
+          <Route
+            exact
+            path="/repairs"
+            render={({ location }) => (
+              <Repairs
+                filters={qs.parse(location.search)}
+              />
+            )}
+          />
           <Route
             exact
             path="/repairs/:id"
             render={({ match }) => (
-              <RepairDetail id={match.params.id} />
+              <RepairDetail
+                id={match.params.id}
+              />
             )}
           />
           <Redirect exact from="/" to="/repairs" />
