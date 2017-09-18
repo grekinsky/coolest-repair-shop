@@ -1,5 +1,17 @@
 import PropTypes from 'prop-types';
 
+// User Model
+export const User = PropTypes.shape({
+  avatarUrl: PropTypes.string,
+  displayName: PropTypes.string,
+  email: PropTypes.string,
+  providerData: PropTypes.array,
+  role: PropTypes.string,
+});
+
+// User Colllection
+export const UserList = PropTypes.objectOf(User);
+
 // Repair Model
 export const Repair = PropTypes.shape({
   date: PropTypes.string,
@@ -7,7 +19,10 @@ export const Repair = PropTypes.shape({
   status: PropTypes.string,
   time: PropTypes.string,
   timestamp: PropTypes.string,
-  uid: PropTypes.string,
+  user: PropTypes.oneOfType([
+    User,
+    PropTypes.string,
+  ]),
 });
 
 // Repair Collection
@@ -22,13 +37,3 @@ export const Comment = PropTypes.shape({
 
 // Comment Collection
 export const CommentList = PropTypes.objectOf(Comment);
-
-// User Model
-export const User = PropTypes.shape({
-  displayName: PropTypes.string,
-  email: PropTypes.string,
-  role: PropTypes.string,
-});
-
-// User Colllection
-export const UserList = PropTypes.objectOf(User);

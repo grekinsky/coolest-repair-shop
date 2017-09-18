@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import { firebaseConnect, populate } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Repairs.css';
@@ -111,10 +111,15 @@ class Repairs extends Component {
         <table className={cx('Repairs-table')}>
           <thead>
             <tr>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Timestamp</th>
-              <th />
+              <th rowSpan={2}>Description</th>
+              <th rowSpan={2}>Status</th>
+              <th colSpan={3}>Assigned</th>
+              <th rowSpan={2}>Actions</th>
+            </tr>
+            <tr>
+              <th>User</th>
+              <th>Date</th>
+              <th>Time</th>
             </tr>
           </thead>
           <tbody>
@@ -128,7 +133,21 @@ class Repairs extends Component {
                     </NavLink>
                   </td>
                   <td>{repair.status}</td>
-                  <td>{repair.timestamp}</td>
+                  <td>
+                    {repair.user !== '0'
+                      ? repair.user.displayName
+                      : '(not assigned)'}
+                  </td>
+                  <td>
+                    {repair.user !== '0'
+                      ? repair.date
+                      : '-'}
+                  </td>
+                  <td>
+                    {repair.user !== '0'
+                      ? repair.time
+                      : '-'}
+                  </td>
                   <td>
                     <div>
                       {this.getActionsFor(actions, rKey, repair)}
@@ -171,17 +190,22 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),
 });
 
+const populates = [
+  { child: 'user', root: 'users' },
+];
+
 export default compose(
   firebaseConnect([
     {
       path: '/repairs',
       storeAs: 'repairList',
+      populates,
     },
   ]),
   connect(
-    ({ firebase: { data: { repairList }, auth } }) => ({
-      repairs: repairList,
-      auth,
+    ({ firebase }) => ({
+      repairs: populate(firebase, 'repairList', populates),
+      auth: firebase.auth,
     }),
     mapDispatchToProps,
   ),
