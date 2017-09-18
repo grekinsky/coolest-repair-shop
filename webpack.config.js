@@ -138,6 +138,11 @@ module.exports = () => {
         template: 'src/index.ejs',
         appMountId: 'app',
         inject: false,
+        chunks: [
+          vendorFilename,
+          appFilename,
+        ],
+        chunksSortMode: 'manual',
       }),
     ]),
     devServer: ifDevServer({
