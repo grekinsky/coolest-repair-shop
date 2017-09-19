@@ -17,7 +17,6 @@ export const Repair = PropTypes.shape({
   date: PropTypes.string,
   description: PropTypes.string,
   status: PropTypes.string,
-  time: PropTypes.string,
   timestamp: PropTypes.string,
   user: PropTypes.oneOfType([
     User,

@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import { firebaseConnect, populate, isEmpty } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Repairs.css';
+import Popup from '../Popup';
 import { RepairList } from '../../models';
 import repairActions from '../../actions/repairActions';
-import UserSelector from '../UserSelector';
+import UserAssignment from '../UserAssignment';
 import { getVisibleRepairs } from '../../reducers';
+import { extractHoursFromDate, dateFormat, timeFormat } from '../../util';
+import { DATE_FORMAT } from '../../config/constants';
 import Filters from './Filters';
 
 const cx = classNames.bind(styles);
@@ -116,7 +119,7 @@ class Repairs extends Component {
             <tr>
               <th rowSpan={2}>Description</th>
               <th rowSpan={2}>Status</th>
-              <th colSpan={3}>Assigned</th>
+              <th colSpan={3}>Assigned to</th>
               <th rowSpan={2}>Actions</th>
             </tr>
             <tr>
@@ -128,6 +131,7 @@ class Repairs extends Component {
           <tbody>
             {Object.keys(repairs).map((rKey) => {
               const repair = repairs[rKey];
+              const d = !isEmpty(repair.user) ? extractHoursFromDate(repair.date) : null;
               return (
                 <tr key={rKey}>
                   <td>
@@ -137,18 +141,18 @@ class Repairs extends Component {
                   </td>
                   <td>{repair.status}</td>
                   <td>
-                    {repair.user !== '0'
-                      ? repair.user
+                    {!isEmpty(repair.user)
+                      ? repair.user.displayName
                       : '(not assigned)'}
                   </td>
                   <td>
-                    {repair.user !== '0'
-                      ? repair.date
+                    {!isEmpty(repair.user)
+                      ? dateFormat(d.date, DATE_FORMAT)
                       : '-'}
                   </td>
                   <td>
-                    {repair.user !== '0'
-                      ? repair.time
+                    {!isEmpty(repair.user)
+                      ? timeFormat(d.h)
                       : '-'}
                   </td>
                   <td>
@@ -162,10 +166,13 @@ class Repairs extends Component {
           </tbody>
         </table>
         {this.state.assignTo
-          ? <UserSelector
-            onSelected={this.onSelectedForAssign}
-            onClose={this.hidePopup}
-          /> : ''
+          ? (
+            <Popup onClose={this.hidePopup} wide={false}>
+              <UserAssignment
+                onSelected={this.onSelectedForAssign}
+              />
+            </Popup>
+          ) : ''
         }
       </div>
     );
@@ -198,16 +205,15 @@ const populates = [
 ];
 
 export default compose(
-  firebaseConnect([
-    {
-      path: '/repairs',
-      storeAs: 'repairList',
-      populates,
-    },
-  ]),
+  firebaseConnect(({ filters }) => [{
+    path: '/repairs',
+    storeAs: 'repairList',
+    queryParams: filters.user ? ['orderByChild=user', `equalTo=${filters.user}`] : null,
+    populates,
+  }]),
   connect(
     ({ firebase }, { filters }) => ({
-      repairs: getVisibleRepairs(firebase.data.repairList, filters),
+      repairs: getVisibleRepairs(populate(firebase, 'repairList', populates), filters),
       auth: firebase.auth,
     }),
     mapDispatchToProps,

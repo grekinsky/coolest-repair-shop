@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import { firebaseConnect } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import classNames from 'classnames/bind';
@@ -27,16 +27,9 @@ class Dashboard extends Component {
     this.props.firebase.logout();
   }
   render() {
-    const { name } = this.props;
-    /* eslint-disable no-nested-ternary */
-    const displayName = !isLoaded(name)
-      ? 'Loading...'
-      : isEmpty(name)
-        ? '(Name)'
-        : name;
     return (
       <div className={cx('Dashboard')}>
-        <h1>Hello {displayName}!</h1>
+        <h1>My coolest repair shop</h1>
         <p><button onClick={this.logout}>Log out</button></p>
         <Switch>
           <Route
@@ -68,15 +61,10 @@ Dashboard.propTypes = {
   firebase: PropTypes.shape({
     logout: PropTypes.func,
   }).isRequired,
-  name: PropTypes.string,
   auth: PropTypes.shape({
     uid: PropTypes.string,
   }).isRequired,
   goTo: PropTypes.func.isRequired,
-};
-
-Dashboard.defaultProps = {
-  name: '',
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -86,12 +74,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
-  firebaseConnect([
-    '/name', // { path: '/name' } // object notation
-  ]),
+  firebaseConnect(),
   connect(
-    ({ firebase: { data: { name }, auth } }) => ({ // state.firebase.data.name
-      name, // Connect props.name to state.firebase.data.name
+    ({ firebase: { auth } }) => ({
       auth,
     }), mapDispatchToProps),
 )(Dashboard);

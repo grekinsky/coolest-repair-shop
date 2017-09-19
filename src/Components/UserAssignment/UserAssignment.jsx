@@ -4,24 +4,16 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import classNames from 'classnames/bind';
-import styles from './UserSelector.css';
+import styles from './UserAssignment.css';
 import { UserList } from '../../models';
 
 const cx = classNames.bind(styles);
 
-class UserSelector extends Component {
-  constructor(props) {
-    super(props);
-    this.onClose = this.onClose.bind(this);
-  }
+class UserAssignment extends Component {
   componentWillReceiveProps({ auth, goTo }) {
     if (auth && !auth.uid) {
       goTo('/login');
     }
-  }
-  onClose(e) {
-    e.preventDefault();
-    this.props.onClose();
   }
   render() {
     const { users, onSelected } = this.props;
@@ -39,56 +31,27 @@ class UserSelector extends Component {
       </li>
     )) : '';
     return (
-      <div className="Popup">
-        <div className="Popup-bg" />
-        <div
-          className="Popup-modal"
-          onClick={this.onClose}
-          role="button"
-          tabIndex={-1}
-        >
-          <div
-            className="Popup-window"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            role="presentation"
-          >
-            <div className="Popup-controls">
-              <a
-                className="Popup-closeButton"
-                href=""
-                onClick={this.onClose}
-              >
-                X
-              </a>
-            </div>
-            <div className={cx('UserSelector')}>
-              <h3>Assign to user:</h3>
-              <ul>
-                {usersData}
-              </ul>
-            </div>
-          </div>
-        </div>
+      <div className={cx('UserAssignment')}>
+        <h3>Assign to user:</h3>
+        <ul>
+          {usersData}
+        </ul>
       </div>
     );
   }
 }
 
-UserSelector.propTypes = {
+UserAssignment.propTypes = {
   auth: PropTypes.shape({
     uid: PropTypes.string,
   }).isRequired,
   users: UserList,
   onSelected: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
-UserSelector.defaultProps = {
+UserAssignment.defaultProps = {
   users: null,
   onSelected: () => {},
-  onClose: () => {},
 };
 
 export default compose(
@@ -106,4 +69,4 @@ export default compose(
       auth,
     }),
   ),
-)(UserSelector);
+)(UserAssignment);
