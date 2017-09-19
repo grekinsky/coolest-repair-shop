@@ -1,0 +1,10 @@
+@import 'react-day-picker/lib/style.css';
+
+.Filters {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.Filters-item--active {
+  font-weight: bold;
+}
