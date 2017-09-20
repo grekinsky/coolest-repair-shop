@@ -9,7 +9,7 @@ import qs from 'query-string';
 import { push } from 'react-router-redux';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import moment from 'moment';
-import Popup from '../../Popup';
+import Popup from '../../Shared/Popup';
 import {
   qsAdd,
   qsRemove,

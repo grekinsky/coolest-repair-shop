@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import classNames from 'classnames/bind';
 import styles from './UserAssignment.css';
-import { UserList } from '../../models';
+import { UserList } from '../../../models';
 
 const cx = classNames.bind(styles);
 
