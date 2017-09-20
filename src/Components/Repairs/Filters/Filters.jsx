@@ -18,36 +18,11 @@ import {
   dateFormat,
 } from '../../../util';
 import { UserList } from '../../../models';
-import { timeList, DATE_FORMAT } from '../../../config/constants';
+import { DATE_FORMAT } from '../../../config/constants';
+import TimeInput from '../../Shared/TimeInput';
 import styles from './Filters.css';
 
 const cx = classNames.bind(styles);
-
-const TimeInput = ({ onChange, value }) => (
-  <select
-    value={value}
-    onChange={
-      (e) => {
-        const selectedValue = e.target.value;
-        onChange(selectedValue);
-      }
-    }
-  >
-    {timeList.map((t, i) =>
-      <option key={t} value={i}>{t}</option> // eslint-disable-line
-    )}
-  </select>
-);
-
-TimeInput.propTypes = {
-  onChange: PropTypes.func,
-  value: PropTypes.string,
-};
-
-TimeInput.defaultProps = {
-  onChange: () => {},
-  value: '',
-};
 
 class Filters extends Component {
   constructor(props) {

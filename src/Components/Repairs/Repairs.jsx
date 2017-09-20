@@ -92,11 +92,11 @@ class Repairs extends Component {
       goTo('/login');
     }
   }
-  async onSelectedForAssign(userId) {
+  async onSelectedForAssign(userId, date) {
     const { actions: { assign } } = this.props;
     const { assignTo } = this.state;
     try {
-      await assign(assignTo, userId);
+      await assign(assignTo, userId, date);
     } catch (e) {
       console.log(e); // eslint-disable-line
     } finally {
@@ -169,7 +169,7 @@ class Repairs extends Component {
           ? (
             <Popup onClose={this.hidePopup} wide={false}>
               <UserAssignment
-                onSelected={this.onSelectedForAssign}
+                onApply={this.onSelectedForAssign}
               />
             </Popup>
           ) : ''

@@ -3,3 +3,29 @@
     margin-top: 0;
   }
 }
+
+.UserAssignment-searchField {
+  height: 40px;
+  line-height: 40px;
+  width: 100%;
+}
+
+ul.UserAssignment-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0 0 0;
+  > li {
+    > a {
+      display: block;
+      border-bottom: 1px solid rgba(0,0,0,.1);;
+      padding: 8px 5px;
+      &:hover {
+        background-color: rgba(0,0,0,.05);
+        text-decoration: none;
+      }
+    }
+    &:last-child > a{
+      border-bottom: 0;
+    }
+  }
+}
