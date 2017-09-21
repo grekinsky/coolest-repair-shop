@@ -1,6 +1,6 @@
 import qs from 'query-string';
 import moment from 'moment';
-import { timeList } from './config/constants';
+import { timeList, DATE_FORMAT } from './config/constants';
 
 export const qsAdd = (q, val) => {
   if (!val) return '';
@@ -50,4 +50,11 @@ export const extractHoursFromDate = (date) => {
     date: flat.valueOf(),
     h: d.format('H'),
   };
+};
+
+export const dateTimeFormat = (date) => {
+  const d = extractHoursFromDate(date);
+  const formatedDate = dateFormat(d.date, DATE_FORMAT);
+  const formatedTime = timeFormat(d.h);
+  return `${formatedDate} ${formatedTime}`;
 };

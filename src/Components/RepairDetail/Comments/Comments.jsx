@@ -31,10 +31,10 @@ const Comments = ({ comments, repairId }) => {
   return (
     <div className={cx('Comments')}>
       <h3>Comments</h3>
+      <AddComment repairId={repairId} />
       <ul className={cx('Comments-list')}>
         {commentsData}
       </ul>
-      <AddComment repairId={repairId} />
     </div>
   );
 };
