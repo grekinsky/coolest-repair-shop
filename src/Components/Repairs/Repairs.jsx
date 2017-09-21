@@ -6,10 +6,10 @@ import { firebaseConnect, populate, isEmpty } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Repairs.css';
-import Popup from '../Popup';
+import Popup from '../Shared/Popup';
 import { RepairList } from '../../models';
 import repairActions from '../../actions/repairActions';
-import UserAssignment from '../UserAssignment';
+import UserAssignment from './UserAssignment';
 import { getVisibleRepairs } from '../../reducers';
 import { extractHoursFromDate, dateFormat, timeFormat } from '../../util';
 import { DATE_FORMAT } from '../../config/constants';
@@ -92,11 +92,11 @@ class Repairs extends Component {
       goTo('/login');
     }
   }
-  async onSelectedForAssign(userId) {
+  async onSelectedForAssign(userId, date) {
     const { actions: { assign } } = this.props;
     const { assignTo } = this.state;
     try {
-      await assign(assignTo, userId);
+      await assign(assignTo, userId, date);
     } catch (e) {
       console.log(e); // eslint-disable-line
     } finally {
@@ -169,7 +169,7 @@ class Repairs extends Component {
           ? (
             <Popup onClose={this.hidePopup} wide={false}>
               <UserAssignment
-                onSelected={this.onSelectedForAssign}
+                onApply={this.onSelectedForAssign}
               />
             </Popup>
           ) : ''

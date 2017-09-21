@@ -19,13 +19,14 @@ const repairActions = {
         console.log(e); // eslint-disable-line
       }
     },
-  assign: (repairId, user) =>
+  assign: (repairId, user, date) =>
     async (dispatch, getState, getFirebase) => {
       const firebase = getFirebase();
       try {
         await firebase.update(`repairs/${repairId}`, {
           status: 'assigned',
           user,
+          date,
         });
       } catch (e) {
         console.log(e); // eslint-disable-line

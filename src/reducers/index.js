@@ -69,4 +69,24 @@ export const getVisibleRepairs = (repairs, filters) => {
   return filteredData;
 };
 
+export const getVisibleUsers = (users, filter) => {
+  if (!(users && filter && filter.length > 1)) return users;
+  const filteredData = {};
+  const f = filter;
+  Object.keys(users).map((uKey) => {
+    const u = users[uKey];
+    const displayName = u.displayName.toLowerCase();
+    const email = u.email.toLowerCase();
+    const lKey = uKey.toLowerCase();
+    if (displayName.includes(f)
+      || email.includes(f)
+      || lKey.includes(f)
+    ) {
+      filteredData[uKey] = u;
+    }
+    return null;
+  });
+  return filteredData;
+};
+
 export default app;

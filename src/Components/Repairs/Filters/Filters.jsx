@@ -9,7 +9,7 @@ import qs from 'query-string';
 import { push } from 'react-router-redux';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import moment from 'moment';
-import Popup from '../../Popup';
+import Popup from '../../Shared/Popup';
 import {
   qsAdd,
   qsRemove,
@@ -18,36 +18,11 @@ import {
   dateFormat,
 } from '../../../util';
 import { UserList } from '../../../models';
-import { timeList, DATE_FORMAT } from '../../../config/constants';
+import { DATE_FORMAT } from '../../../config/constants';
+import TimeInput from '../../Shared/TimeInput';
 import styles from './Filters.css';
 
 const cx = classNames.bind(styles);
-
-const TimeInput = ({ onChange, value }) => (
-  <select
-    value={value}
-    onChange={
-      (e) => {
-        const selectedValue = e.target.value;
-        onChange(selectedValue);
-      }
-    }
-  >
-    {timeList.map((t, i) =>
-      <option key={t} value={i}>{t}</option> // eslint-disable-line
-    )}
-  </select>
-);
-
-TimeInput.propTypes = {
-  onChange: PropTypes.func,
-  value: PropTypes.string,
-};
-
-TimeInput.defaultProps = {
-  onChange: () => {},
-  value: '',
-};
 
 class Filters extends Component {
   constructor(props) {
@@ -149,7 +124,7 @@ class Filters extends Component {
                   placeholder={DATE_FORMAT}
                   onDayChange={(selectedDay) => {
                     this.setState({
-                      dateFrom: selectedDay.valueOf().toString(),
+                      dateFrom: selectedDay.valueOf(),
                     });
                   }}
                 />
@@ -169,7 +144,7 @@ class Filters extends Component {
                   placeholder={DATE_FORMAT}
                   onDayChange={(selectedDay) => {
                     this.setState({
-                      dateTo: selectedDay.valueOf().toString(),
+                      dateTo: selectedDay.valueOf(),
                     });
                   }}
                 />
