@@ -12,15 +12,12 @@ const createAppStore = (initialState, history) => {
     profileParamsToPopulate: [
       ['role:roles'], // populates user's role with matching role object from roles
     ],
-    profileFactory: (user) => {
-      console.log(user); // eslint-disable-line
-      return {
-        email: user.email || user.providerData[0].email,
-        role: user.role || 'user',
-        providerData: user.providerData,
-        displayName: user.displayName || user.providerData[0].displayName,
-      };
-    },
+    profileFactory: user => ({
+      email: user.email || user.providerData[0].email,
+      role: user.role || 'user',
+      providerData: user.providerData,
+      displayName: user.displayName || user.providerData[0].displayName,
+    }),
   }; // react-redux-firebase config
   // initialize firebase instance
   const firebaseApp = firebase.initializeApp(fbConfig);

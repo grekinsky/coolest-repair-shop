@@ -14,10 +14,10 @@ export const UserList = PropTypes.objectOf(User);
 
 // Repair Model
 export const Repair = PropTypes.shape({
-  date: PropTypes.string,
+  date: PropTypes.number,
   description: PropTypes.string,
   status: PropTypes.string,
-  timestamp: PropTypes.string,
+  timestamp: PropTypes.number,
   user: PropTypes.oneOfType([
     User,
     PropTypes.string,
@@ -30,8 +30,11 @@ export const RepairList = PropTypes.objectOf(Repair);
 // Comment Model
 export const Comment = PropTypes.shape({
   comment: PropTypes.string,
-  timestamp: PropTypes.string,
-  uid: PropTypes.string,
+  timestamp: PropTypes.number,
+  user: PropTypes.oneOfType([
+    User,
+    PropTypes.string,
+  ]),
 });
 
 // Comment Collection

@@ -124,7 +124,7 @@ class Filters extends Component {
                   placeholder={DATE_FORMAT}
                   onDayChange={(selectedDay) => {
                     this.setState({
-                      dateFrom: selectedDay.valueOf().toString(),
+                      dateFrom: selectedDay.valueOf(),
                     });
                   }}
                 />
@@ -144,7 +144,7 @@ class Filters extends Component {
                   placeholder={DATE_FORMAT}
                   onDayChange={(selectedDay) => {
                     this.setState({
-                      dateTo: selectedDay.valueOf().toString(),
+                      dateTo: selectedDay.valueOf(),
                     });
                   }}
                 />

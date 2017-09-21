@@ -24,7 +24,7 @@ export const qsRemove = (q, val) => {
 };
 
 const parseDate = (date) => {
-  const d = typeof date === 'string' ? parseInt(date, 10) : date;
+  const d = typeof date === 'number' ? date : date;
   return moment.isMoment(d) ? d.clone() : moment(d);
 };
 
@@ -39,7 +39,7 @@ export const setHoursToDate = (date, h) => {
   const d = parseDate(date);
   d.startOf('day');
   d.add(parseInt(h, 10), 'hour');
-  return d.valueOf().toString();
+  return d.valueOf();
 };
 
 export const extractHoursFromDate = (date) => {
@@ -47,7 +47,7 @@ export const extractHoursFromDate = (date) => {
   const flat = d.clone();
   flat.startOf('day');
   return {
-    date: flat.valueOf().toString(),
+    date: flat.valueOf(),
     h: d.format('H'),
   };
 };
