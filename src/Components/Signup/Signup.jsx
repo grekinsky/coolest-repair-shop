@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,7 +6,6 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Signup.css';
-import { socialProviders } from '../../config/constants';
 import { userIsNotAuthenticated } from '../../Services/User';
 
 const cx = classNames.bind(styles);
@@ -15,17 +13,16 @@ const cx = classNames.bind(styles);
 class Signup extends Component {
   constructor(props) {
     super(props);
-    this.socialProviderLogin = this.socialProviderLogin.bind(this);
     this.signUpWithCredentials = this.signUpWithCredentials.bind(this);
   }
   async signUpWithCredentials({ displayName, email, password, rePassword }) {
     if (!(displayName && email && password && rePassword)) {
       debugger; // eslint-disable-line
-      console.error('All fields are required.');
+      console.error('All fields are required.'); // eslint-disable-line
       return false;
     }
     if (password !== rePassword) {
-      console.error('Passwords don\'t match');
+      console.error('Passwords don\'t match'); // eslint-disable-line
       return false;
     }
     try {
@@ -35,21 +32,8 @@ class Signup extends Component {
       });
       await this.props.firebase.updateProfile({ displayName });
     } catch (e) {
-      console.error('there was an error', e);
-      console.log('error prop:', this.props.authError); // thanks to connect
-    }
-    return true;
-  }
-  async socialProviderLogin(providerType) {
-    // provider validation, should let add more providers later
-    const provider = socialProviders
-      .filter(item => item === providerType);
-    if (!provider.length) return false;
-    try {
-      await this.props.firebase.login({ providerType });
-    } catch (e) {
-      console.log('there was an error', e);
-      console.log('error prop:', this.props.authError); // thanks to connect
+      console.error('there was an error', e); // eslint-disable-line
+      console.log('error prop:', this.props.authError); // eslint-disable-line
     }
     return true;
   }
@@ -78,21 +62,13 @@ class Signup extends Component {
               <dt>Re-type password:</dt>
               <dd><input type="password" ref={(el) => { this.rePassword = el; }} /></dd>
               <dt />
-              <dd><input type="submit" defaultValue="Sign in" /></dd>
+              <dd><input type="submit" defaultValue="Sign up" /></dd>
             </dl>
           </fieldset>
         </form>
         <p>
           <NavLink exact to="/login">{'I already have an account'}</NavLink>
         </p>
-        <p>Or choose your preferred method:</p>
-        <ul>
-          <li>
-            <button onClick={() => { this.socialProviderLogin('google'); }}>
-              Google Login
-            </button>
-          </li>
-        </ul>
       </div>
     );
   }

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,7 +6,6 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Login.css';
-import { socialProviders } from '../../config/constants';
 import { userIsNotAuthenticated } from '../../Services/User';
 
 const cx = classNames.bind(styles);
@@ -15,33 +13,14 @@ const cx = classNames.bind(styles);
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.socialProviderLogin = this.socialProviderLogin.bind(this);
     this.loginWithCredentials = this.loginWithCredentials.bind(this);
-  }
-  componentWillReceiveProps({ auth, goTo }) {
-    if (auth && auth.uid) {
-      goTo('/');
-    }
   }
   async loginWithCredentials({ email, password }) {
     try {
       await this.props.firebase.login({ email, password });
     } catch (e) {
-      console.log('there was an error', e);
-      console.log('error prop:', this.props.authError); // thanks to connect
-    }
-    return true;
-  }
-  async socialProviderLogin(providerType) {
-    // provider validation, should let add more providers later
-    const provider = socialProviders
-      .filter(item => item === providerType);
-    if (!provider.length) return false;
-    try {
-      await this.props.firebase.login({ provider: providerType });
-    } catch (e) {
-      console.log('there was an error', e);
-      console.log('error prop:', this.props.authError); // thanks to connect
+      console.log('there was an error', e); // eslint-disable-line
+      console.log('error prop:', this.props.authError); // eslint-disable-line
     }
     return true;
   }
@@ -64,21 +43,13 @@ class Login extends Component {
               <dt>Password:</dt>
               <dd><input type="password" ref={(el) => { this.password = el; }} /></dd>
               <dt />
-              <dd><input type="submit" defaultValue="Sign in" /></dd>
+              <dd><input type="submit" defaultValue="Log in" /></dd>
             </dl>
           </fieldset>
         </form>
         <p>
           <NavLink exact to="/signup">{'Don\'t have an account yet?'}</NavLink>
         </p>
-        <p>Or choose your preferred method:</p>
-        <ul>
-          <li>
-            <button onClick={() => { this.socialProviderLogin('google'); }}>
-              Google Login
-            </button>
-          </li>
-        </ul>
       </div>
     );
   }
