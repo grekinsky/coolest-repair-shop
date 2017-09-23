@@ -9,6 +9,10 @@ import qs from 'query-string';
 import styles from './Dashboard.css';
 import Repairs from '../Repairs';
 import RepairDetail from '../RepairDetail';
+import RepairModify from '../RepairModify';
+import Users from '../Users';
+import UserDetail from '../UserDetail';
+import UserModify from '../UserModify';
 import { userIsAuthenticated } from '../../Services/User';
 
 const cx = classNames.bind(styles);
@@ -32,7 +36,7 @@ class Dashboard extends Component {
     this.props.firebase.logout();
   }
   render() {
-    const { role, displayName } = this.props;
+    const { role, displayName, showIfAdmin } = this.props;
     return (
       <div className={cx('Dashboard')}>
         <aside className={cx('Sidebar')}>
@@ -45,7 +49,7 @@ class Dashboard extends Component {
           </section>
           <nav className={cx('Sidebar-nav')}>
             <SidebarNavItem to="/repairs">Repairs</SidebarNavItem>
-            <SidebarNavItem to="/users">Users</SidebarNavItem>
+            {showIfAdmin(<SidebarNavItem to="/users">Users</SidebarNavItem>)}
           </nav>
         </aside>
         <section className={cx('Dashboard-main')}>
@@ -63,9 +67,61 @@ class Dashboard extends Component {
             />
             <Route
               exact
+              path="/repairs/add"
+              render={() => (
+                <RepairModify
+                  mode="add"
+                />
+              )}
+            />
+            <Route
+              exact
               path="/repairs/:id"
               render={({ match }) => (
                 <RepairDetail
+                  id={match.params.id}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/repairs/:id/edit"
+              render={({ match }) => (
+                <RepairModify
+                  mode="update"
+                  id={match.params.id}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/users"
+              component={Users}
+            />
+            <Route
+              exact
+              path="/users/add"
+              render={() => (
+                <UserModify
+                  mode="add"
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/users/:id"
+              render={({ match }) => (
+                <UserDetail
+                  id={match.params.id}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/users/:id/edit"
+              render={({ match }) => (
+                <UserModify
+                  mode="update"
                   id={match.params.id}
                 />
               )}
@@ -84,6 +140,7 @@ Dashboard.propTypes = {
   }).isRequired,
   role: PropTypes.string,
   displayName: PropTypes.string,
+  showIfAdmin: PropTypes.func.isRequired,
 };
 
 Dashboard.defaultProps = {
@@ -97,5 +154,6 @@ export default compose(
   connect(({ firebase: { profile: { role, displayName } } }) => ({
     role,
     displayName,
+    showIfAdmin: c => (role === 'admin' ? c : null),
   })),
 )(Dashboard);
