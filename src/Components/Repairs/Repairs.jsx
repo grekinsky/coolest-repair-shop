@@ -112,50 +112,54 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),
 });
 
-export default compose(
-  firebaseConnect(({ filters, role }, firebase) => [
-    {
-      path: '/repairs',
-      storeAs: 'repairList',
-      queryParams: filters.user ? ['orderByChild=user', `equalTo=${filters.user}`] : null,
-    },
-    {
-      path: (role === 'user' ? `/assignments/${firebase._.authUid}` : '/assignments'),
-      storeAs: 'assignmentList',
-    },
-    {
-      path: '/users',
-      storeAs: 'userList',
-    },
-  ]),
-  connect(
-    (
-      {
-        firebase: {
-          data: {
-            assignmentList,
-            repairList,
-            userList,
-          },
-          profile: { role },
-          auth: { uid },
-        },
+const mapStateToProps = (
+  {
+    firebase: {
+      data: {
+        assignmentList,
+        repairList,
+        userList,
       },
-      { filters },
-    ) => ({
-      repairs: getVisibleRepairs(
-        flattenRepairs(
-          repairList,
-          userList,
-          assignmentList,
-          role,
-          uid,
-        ),
-        filters,
-      ),
-      isAdmin: role === 'admin',
-      showIfAdmin: c => (role === 'admin' ? c : null),
-    }),
+      profile: { role },
+      auth: { uid },
+    },
+  },
+  { filters },
+) => ({
+  repairs: getVisibleRepairs(
+    flattenRepairs(
+      repairList,
+      userList,
+      assignmentList,
+      role,
+      uid,
+    ),
+    filters,
+  ),
+  isAdmin: role === 'admin',
+  showIfAdmin: c => (role === 'admin' ? c : null),
+});
+
+const fbStoreKey = ({ filters, role }, firebase) => [
+  {
+    path: '/repairs',
+    storeAs: 'repairList',
+    queryParams: filters.user ? ['orderByChild=user', `equalTo=${filters.user}`] : null,
+  },
+  {
+    path: (role === 'user' ? `/assignments/${firebase._.authUid}` : '/assignments'),
+    storeAs: 'assignmentList',
+  },
+  {
+    path: '/users',
+    storeAs: 'userList',
+  },
+];
+
+export default compose(
+  firebaseConnect(fbStoreKey),
+  connect(
+    mapStateToProps,
     mapDispatchToProps,
   ),
 )(Repairs);
