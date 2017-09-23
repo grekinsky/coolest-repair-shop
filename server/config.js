@@ -15,18 +15,21 @@ const environment = {
     devTool: 'inline-source-map',
     minified: false,
     devServer: true,
+    appEnv: 'production', // TODO: Set to development when environment is properly setup
   }),
   development: applyDefaults({
     // development config
     devTool: 'source-map',
     minified: false,
     devserver: false,
+    appEnv: 'production', // TODO: Set to development when environment is properly setup
   }),
   production: applyDefaults({
     // production config
     devTool: false,
     minified: true,
     devServer: false,
+    appEnv: 'production',
   }),
 };
 

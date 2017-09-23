@@ -12,6 +12,7 @@
 </head>
 <body>
 <% if (htmlWebpackPlugin.options.appMountId) { %><div id="<%= htmlWebpackPlugin.options.appMountId%>"></div><% } %>
+<% if (htmlWebpackPlugin.options.appEnv) { %><script>window.env = '<%= htmlWebpackPlugin.options.appEnv%>';</script><% } %>
 <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
 <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
 <% } %>

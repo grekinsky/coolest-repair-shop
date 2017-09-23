@@ -1,13 +1,29 @@
+export const ENV = window.env || 'development';
+
 // Error Types
 export const ERROR_GENERAL = 0;
 
 // Firebase config
-export const fbConfig = {
+const fbConfigProduction = {
   apiKey: 'AIzaSyCIlmp4g_8N7cJaZEOoFh4u15TTUE2zVFg',
   authDomain: 'toptal-react-academy.firebaseapp.com',
   databaseURL: 'https://toptal-react-academy.firebaseio.com',
   projectId: 'toptal-react-academy',
 };
+
+const fbConfigDevelopment = {
+  apiKey: 'AIzaSyArYwTEoR1giF3vwl8skL8Gj3NMrPbvT88',
+  authDomain: 'toptal-react-academy-dev.firebaseapp.com',
+  databaseURL: 'https://toptal-react-academy-dev.firebaseio.com',
+  projectId: 'toptal-react-academy-dev',
+};
+
+const fbConfig = {
+  development: fbConfigDevelopment,
+  production: fbConfigProduction,
+};
+
+export const getFbConfig = env => fbConfig[env] || fbConfig.development;
 
 export const timeList = [
   '12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM', '6:00 AM',

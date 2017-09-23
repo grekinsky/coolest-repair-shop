@@ -4,7 +4,7 @@ import { routerMiddleware } from 'react-router-redux';
 import firebase from 'firebase';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import appState from './reducers';
-import { fbConfig } from './config/constants';
+import { getFbConfig, ENV } from './config/constants';
 
 const createAppStore = (initialState, history) => {
   const rrfConfig = {
@@ -20,7 +20,7 @@ const createAppStore = (initialState, history) => {
     }),
   }; // react-redux-firebase config
   // initialize firebase instance
-  const firebaseApp = firebase.initializeApp(fbConfig);
+  const firebaseApp = firebase.initializeApp(getFbConfig(ENV));
 
   const createStoreWithFirebase = compose(
     reactReduxFirebase(firebaseApp, rrfConfig), // firebase instance as first argument

@@ -137,6 +137,7 @@ module.exports = () => {
         cache: false,
         template: 'src/index.ejs',
         appMountId: 'app',
+        appEnv: config.appEnv,
         inject: false,
         chunks: [
           vendorFilename,
