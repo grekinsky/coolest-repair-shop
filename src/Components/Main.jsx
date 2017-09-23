@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import Dashboard from './Dashboard';
 import Login from './Login';
 import Signup from './Signup';
+import Forbidden from './Forbidden';
 
 const Main = ({
   store,
@@ -17,6 +18,7 @@ const Main = ({
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
+        <Route exact path="/forbidden" component={Forbidden} />
         <Route path="/" component={Dashboard} />
       </Switch>
     </ConnectedRouter>

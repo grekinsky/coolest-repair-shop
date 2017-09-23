@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { firebaseConnect } from 'react-redux-firebase';
-import { push } from 'react-router-redux';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import qs from 'query-string';
 import styles from './Dashboard.css';
 import Repairs from '../Repairs';
 import RepairDetail from '../RepairDetail';
+import { userIsAuthenticated } from '../../Services/User';
 
 const cx = classNames.bind(styles);
 
@@ -18,15 +18,11 @@ class Dashboard extends Component {
     super(props);
     this.logout = this.logout.bind(this);
   }
-  componentWillReceiveProps({ auth, goTo }) {
-    if (auth && !auth.uid) {
-      goTo('/login');
-    }
-  }
   logout() {
     this.props.firebase.logout();
   }
   render() {
+    const { role } = this.props;
     return (
       <div className={cx('Dashboard')}>
         <h1>My coolest repair shop</h1>
@@ -35,11 +31,13 @@ class Dashboard extends Component {
           <Route
             exact
             path="/repairs"
-            render={({ location }) => (
-              <Repairs
-                filters={qs.parse(location.search)}
-              />
-            )}
+            render={({ location }) =>
+              (!isEmpty(role) ? (
+                <Repairs
+                  filters={qs.parse(location.search)}
+                  role={role}
+                />
+              ) : null)}
           />
           <Route
             exact
@@ -61,22 +59,17 @@ Dashboard.propTypes = {
   firebase: PropTypes.shape({
     logout: PropTypes.func,
   }).isRequired,
-  auth: PropTypes.shape({
-    uid: PropTypes.string,
-  }).isRequired,
-  goTo: PropTypes.func.isRequired,
+  role: PropTypes.string,
 };
 
-const mapDispatchToProps = dispatch => ({
-  goTo: (route) => {
-    dispatch(push(route));
-  },
-});
+Dashboard.defaultProps = {
+  role: '',
+};
 
 export default compose(
+  userIsAuthenticated,
   firebaseConnect(),
-  connect(
-    ({ firebase: { auth } }) => ({
-      auth,
-    }), mapDispatchToProps),
+  connect(({ firebase: { profile: { role } } }) => ({
+    role,
+  })),
 )(Dashboard);

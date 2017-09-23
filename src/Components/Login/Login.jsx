@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { firebaseConnect, isLoaded } from 'react-redux-firebase';
-import { push } from 'react-router-redux';
+import { firebaseConnect } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
+import classNames from 'classnames/bind';
+import styles from './Login.css';
 import { socialProviders } from '../../config/constants';
-// import classNames from 'classnames/bind';
-// import styles from './Login.css';
+import { userIsNotAuthenticated } from '../../Services/User';
 
-// const cx = classNames.bind(styles);
+const cx = classNames.bind(styles);
 
 class Login extends Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class Login extends Component {
       .filter(item => item === providerType);
     if (!provider.length) return false;
     try {
-      await this.props.firebase.login({ providerType });
+      await this.props.firebase.login({ provider: providerType });
     } catch (e) {
       console.log('there was an error', e);
       console.log('error prop:', this.props.authError); // thanks to connect
@@ -46,18 +46,8 @@ class Login extends Component {
     return true;
   }
   render() {
-    const { auth } = this.props;
-
-    if (!isLoaded(auth)) {
-      return (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     return (
-      <div>
+      <div className={cx('Login')}>
         <h1>Login page</h1>
         <form onSubmit={(e) => {
           e.preventDefault();
@@ -98,32 +88,20 @@ Login.propTypes = {
   firebase: PropTypes.shape({
     login: PropTypes.func,
   }).isRequired,
-  auth: PropTypes.shape({
-    displayName: PropTypes.string,
-  }).isRequired,
   authError: PropTypes.shape({
     message: PropTypes.string,
   }).isRequired,
-  goTo: PropTypes.func,
 };
 
 Login.defaultProps = {
   authError: null,
-  redirectToHome: () => {},
-  goTo: () => {},
 };
 
-const mapDispatchToProps = dispatch => ({
-  goTo: (route) => {
-    dispatch(push(route));
-  },
-});
-
 export default compose(
+  userIsNotAuthenticated,
   firebaseConnect(),
   connect( // map redux state to props
-    ({ firebase: { authError, auth } }) => ({
+    ({ firebase: { authError } }) => ({
       authError,
-      auth,
-    }), mapDispatchToProps),
+    })),
 )(Login);

@@ -52,7 +52,7 @@ class Filters extends Component {
     });
   }
   render() {
-    const { routing, goTo, users } = this.props;
+    const { routing, goTo, users, showIfAdmin } = this.props;
     const q = routing.location.search;
     // TODO: Remove hardcoded data from filters
     return (
@@ -81,30 +81,34 @@ class Filters extends Component {
             match && !qs.parse(currentLocation.search).status
           }
         > All </NavLink>
-        {'| User: '}
-        <select
-          onChange={
-            (e) => {
-              const selectedValue = e.target.value;
-              if (!selectedValue) {
-                goTo({
-                  pathname: '/repairs',
-                  search: qsRemove(q, 'user'),
-                });
-              } else {
-                goTo({
-                  pathname: '/repairs',
-                  search: qsAdd(q, { user: selectedValue }),
-                });
+        {showIfAdmin(
+          <span>
+            {'| User: '}
+            <select
+              onChange={
+                (e) => {
+                  const selectedValue = e.target.value;
+                  if (!selectedValue) {
+                    goTo({
+                      pathname: '/repairs',
+                      search: qsRemove(q, 'user'),
+                    });
+                  } else {
+                    goTo({
+                      pathname: '/repairs',
+                      search: qsAdd(q, { user: selectedValue }),
+                    });
+                  }
+                }
               }
-            }
-          }
-        >
-          <option value="">All</option>
-          {!isEmpty(users) ? Object.keys(users).map(cKey => (
-            <option key={cKey} value={cKey}>{users[cKey].displayName}</option>
-          )) : ''}
-        </select>
+            >
+              <option value="">All</option>
+              {!isEmpty(users) ? Object.keys(users).map(cKey => (
+                <option key={cKey} value={cKey}>{users[cKey].displayName}</option>
+              )) : ''}
+            </select>
+          </span>,
+        )}
         <a
           href=""
           onClick={(e) => {
@@ -197,6 +201,7 @@ Filters.propTypes = {
   users: UserList,
   routing: PropTypes.object, // eslint-disable-line
   goTo: PropTypes.func.isRequired,
+  showIfAdmin: PropTypes.func.isRequired,
 };
 
 Filters.defaultProps = {
@@ -220,10 +225,11 @@ export default compose(
   ]),
   connect(
     (
-      { firebase: { data: { userList } }, routing },
+      { firebase: { data: { userList }, profile: { role } }, routing },
     ) => ({
       users: userList,
       routing,
+      showIfAdmin: c => (role === 'admin' ? c : null),
     }),
     mapDispatchToProps,
   ),

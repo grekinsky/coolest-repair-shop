@@ -12,9 +12,24 @@ export const User = PropTypes.shape({
 // User Colllection
 export const UserList = PropTypes.objectOf(User);
 
+// FlatRepair Model
+export const FlatRepair = PropTypes.shape({
+  id: PropTypes.string,
+  description: PropTypes.string,
+  status: PropTypes.string,
+  timestamp: PropTypes.number,
+  user: PropTypes.oneOfType([
+    User,
+    PropTypes.string,
+  ]),
+  date: PropTypes.number,
+});
+
+// FlatRepair Collection
+export const FlatRepairList = PropTypes.arrayOf(FlatRepair);
+
 // Repair Model
 export const Repair = PropTypes.shape({
-  date: PropTypes.number,
   description: PropTypes.string,
   status: PropTypes.string,
   timestamp: PropTypes.number,
@@ -39,3 +54,13 @@ export const Comment = PropTypes.shape({
 
 // Comment Collection
 export const CommentList = PropTypes.objectOf(Comment);
+
+// Assignment Model
+export const Assignment = PropTypes.objectOf( // repairId
+  PropTypes.shape({ // assignment
+    date: PropTypes.number,
+  }),
+);
+
+// Assignment Collection
+export const AssignmentList = PropTypes.objectOf(Assignment);

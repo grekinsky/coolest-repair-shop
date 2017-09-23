@@ -3,21 +3,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { firebaseConnect, isLoaded } from 'react-redux-firebase';
-import { push } from 'react-router-redux';
+import { firebaseConnect } from 'react-redux-firebase';
 import { NavLink } from 'react-router-dom';
+import classNames from 'classnames/bind';
+import styles from './Signup.css';
 import { socialProviders } from '../../config/constants';
+import { userIsNotAuthenticated } from '../../Services/User';
+
+const cx = classNames.bind(styles);
 
 class Signup extends Component {
   constructor(props) {
     super(props);
     this.socialProviderLogin = this.socialProviderLogin.bind(this);
     this.signUpWithCredentials = this.signUpWithCredentials.bind(this);
-  }
-  componentWillReceiveProps({ auth, goTo }) {
-    if (auth && auth.uid) {
-      goTo('/');
-    }
   }
   async signUpWithCredentials({ displayName, email, password, rePassword }) {
     if (!(displayName && email && password && rePassword)) {
@@ -55,18 +54,8 @@ class Signup extends Component {
     return true;
   }
   render() {
-    const { auth } = this.props;
-
-    if (!isLoaded(auth)) {
-      return (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     return (
-      <div>
+      <div className={cx('Signup')}>
         <h1>Signup page</h1>
         <form onSubmit={(e) => {
           e.preventDefault();
@@ -115,31 +104,20 @@ Signup.propTypes = {
     createUser: PropTypes.func,
     updateProfile: PropTypes.func,
   }).isRequired,
-  auth: PropTypes.shape({
-    displayName: PropTypes.string,
-  }).isRequired,
   authError: PropTypes.shape({
     message: PropTypes.string,
   }),
-  goTo: PropTypes.func.isRequired,
 };
 
 Signup.defaultProps = {
   authError: null,
-  goTo: () => {},
 };
 
-const mapDispatchToProps = dispatch => ({
-  goTo: (route) => {
-    dispatch(push(route));
-  },
-});
-
 export default compose(
+  userIsNotAuthenticated,
   firebaseConnect(),
   connect( // map redux state to props
-    ({ firebase: { authError, auth } }) => ({
+    ({ firebase: { authError } }) => ({
       authError,
-      auth,
-    }), mapDispatchToProps),
+    })),
 )(Signup);

@@ -1,7 +1,7 @@
 // App State
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { firebaseStateReducer } from 'react-redux-firebase';
+import { firebaseStateReducer, isEmpty } from 'react-redux-firebase';
 
 const error = (state = null, action) => {
   switch (action.type) {
@@ -25,19 +25,17 @@ const app = combineReducers({
 
 const filterByStatus = (repairs, status) => {
   if (!(repairs && status)) return repairs;
-  const filteredData = {};
+  const filteredData = [];
   switch (status) {
     case 'complete':
-      Object.keys(repairs).map((rKey) => {
-        const r = repairs[rKey];
-        if (r.status === 'done') filteredData[rKey] = r;
+      repairs.map((r) => {
+        if (r.status === 'done') filteredData.push(r);
         return null;
       });
       return filteredData;
     case 'incomplete':
-      Object.keys(repairs).map((rKey) => {
-        const r = repairs[rKey];
-        if (r.status !== 'approved' && r.status !== 'done') filteredData[rKey] = r;
+      repairs.map((r) => {
+        if (r.status !== 'approved' && r.status !== 'done') filteredData.push(r);
         return null;
       });
       return filteredData;
@@ -48,10 +46,9 @@ const filterByStatus = (repairs, status) => {
 
 const filterByDateTime = (repairs, dateFrom, dateTo) => {
   if (!(repairs && dateFrom && dateTo && dateFrom <= dateTo)) return repairs;
-  const filteredData = {};
-  Object.keys(repairs).map((rKey) => {
-    const r = repairs[rKey];
-    if (r.date >= dateFrom && r.date <= dateTo) filteredData[rKey] = r;
+  const filteredData = [];
+  repairs.map((r) => {
+    if (r.date >= dateFrom && r.date <= dateTo) filteredData.push(r);
     return null;
   });
   return filteredData;
@@ -68,6 +65,64 @@ export const getVisibleRepairs = (repairs, filters) => {
   );
   return filteredData;
 };
+
+export const flattenRepairsByUser = (repairs, users, assignments) => {
+  if (isEmpty(repairs) || isEmpty(users) || isEmpty(assignments)) return [];
+  const flatRepairs = [];
+  Object.keys(assignments).map(akey =>
+    Object.keys(assignments[akey]).map((rkey) => {
+      const r = repairs[rkey];
+      if (isEmpty(r)) return null;
+      const user = users[r.user];
+      const date = assignments[akey] && assignments[akey][rkey]
+        ? assignments[akey][rkey].date
+        : 0;
+      const repair = Object.assign({}, r, {
+        id: rkey,
+        user,
+        date,
+      });
+      flatRepairs.push(repair);
+      return false;
+    }),
+  );
+  return flatRepairs;
+};
+
+export const flattenAllRepairs = (repairs, users, assignments) => {
+  if (isEmpty(repairs) || isEmpty(users) || isEmpty(assignments)) return [];
+  const flatRepairs = [];
+  Object.keys(repairs).map((rkey) => {
+    const r = repairs[rkey];
+    if (isEmpty(r)) return null;
+    const user = users[r.user];
+    const date = assignments[r.user] && assignments[r.user][rkey]
+      ? assignments[r.user][rkey].date
+      : 0;
+    const repair = Object.assign({}, r, {
+      id: rkey,
+      user,
+      date,
+    });
+    flatRepairs.push(repair);
+    return false;
+  });
+  return flatRepairs;
+};
+
+export const flattenRepairs = (repairs, users, assignments, role, uid) =>
+  (role === 'admin'
+    ? flattenAllRepairs(
+      repairs,
+      users,
+      assignments,
+    )
+    : flattenRepairsByUser(
+      repairs,
+      users,
+      Object.assign({}, { [uid]: assignments }),
+    )
+  );
 
 export const getVisibleUsers = (users, filter) => {
   if (!(users && filter && filter.length > 1)) return users;

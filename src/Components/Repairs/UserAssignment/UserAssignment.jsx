@@ -33,11 +33,13 @@ class UserAssignment extends Component {
     this.isDateAvailable = date =>
       new Promise((resolve, reject) => {
         try {
-          const repairsRef = getFirebase().ref('repairs').orderByChild('date').equalTo(date);
+          const repairsRef = getFirebase().ref('assignments');
           repairsRef.once('value', (snapshot) => {
-            const res = !snapshot.hasChildren();
+            const res = !snapshot.forEach(user =>
+              user.forEach(repair =>
+                repair.child('date').val() === date));
             this.setState({
-              error: res ? '' : 'Date is unavailable',
+              error: !res ? 'Date is unavailable' : '',
             });
             resolve(res);
           });
@@ -45,11 +47,6 @@ class UserAssignment extends Component {
           reject(e);
         }
       });
-  }
-  componentWillReceiveProps({ auth, goTo }) {
-    if (auth && !auth.uid) {
-      goTo('/login');
-    }
   }
   render() {
     const { users, onApply } = this.props;
@@ -64,7 +61,7 @@ class UserAssignment extends Component {
               value={dateFormat(this.state.date, DATE_FORMAT)}
               placeholder={DATE_FORMAT}
               onDayChange={async (selectedDay) => {
-                const date = selectedDay.valueOf().toString();
+                const date = selectedDay.valueOf();
                 const d = setHoursToDate(date, this.state.time);
                 await this.isDateAvailable(d);
                 this.setState({
@@ -145,9 +142,6 @@ class UserAssignment extends Component {
 }
 
 UserAssignment.propTypes = {
-  auth: PropTypes.shape({
-    uid: PropTypes.string,
-  }).isRequired,
   users: UserList,
   onApply: PropTypes.func.isRequired,
 };
@@ -166,10 +160,9 @@ export default compose(
   ]),
   connect(
     (
-      { firebase: { data: { userList }, auth } },
+      { firebase: { data: { userList } } },
     ) => ({
       users: userList,
-      auth,
     }),
   ),
 )(UserAssignment);

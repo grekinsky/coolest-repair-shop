@@ -26,6 +26,8 @@ const repairActions = {
         await firebase.update(`repairs/${repairId}`, {
           status: 'assigned',
           user,
+        });
+        await firebase.update(`assignments/${user}/${repairId}`, {
           date,
         });
       } catch (e) {

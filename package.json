@@ -63,6 +63,7 @@
     "react-router-redux": "5.0.0-alpha.6",
     "react-time-ago": "^0.3.8",
     "redux": "^3.7.2",
+    "redux-auth-wrapper": "^2.0.1",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.1",
     "style-loader": "^0.18.2",

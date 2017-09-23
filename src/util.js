@@ -24,7 +24,7 @@ export const qsRemove = (q, val) => {
 };
 
 const parseDate = (date) => {
-  const d = typeof date === 'number' ? date : date;
+  const d = typeof date === 'number' ? date : parseInt(date, 10);
   return moment.isMoment(d) ? d.clone() : moment(d);
 };
 
