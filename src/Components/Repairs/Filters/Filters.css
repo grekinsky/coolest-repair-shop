@@ -3,8 +3,14 @@
 .Filters {
   margin-top: 10px;
   margin-bottom: 10px;
+  display: flex;
 }
 
 .Filters-item--active {
   font-weight: bold;
+}
+
+.Filter-status, .Filter-user, .Filter-date {
+  padding-left: 10px;
+  padding-right: 10px;
 }

@@ -1,11 +1,35 @@
-.Repairs {
-
-}
+.Repairs {}
 
 table.Repairs-table {
   width: 100%;
+  margin-top: 20px;
 
   td, th {
-    border: 1px solid black;
+    text-align: center;
+
+    &.Repairs-cell--center {
+      text-align: center;
+    }
+  }
+
+  thead {
+    border-bottom: 1px solid rgba(0,0,0,.3);
+    background-color: rgba(0,0,0,.02);
+    th {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      &:nth-child(even) {
+        background: transparent;
+      }
+      &:nth-child(odd) {
+        background: white;
+      }
+    }
   }
 }

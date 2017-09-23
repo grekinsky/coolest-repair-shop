@@ -1,1 +1,42 @@
-.Login {}
+.Login {
+  position: absolute;
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 50px rgba(0,0,0,.5);
+  width: 400px;
+
+  h1 {
+    font-size: 24px;
+  }
+
+  fieldset {
+    border: none;
+    padding: 20px 15px;
+    background-color: rgba(0,0,0,.02);
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  dl {
+    margin-top: 0;
+    margin-bottom: 20px;
+    dt {
+      margin-bottom: 5px;
+    }
+    dd {
+      margin-left: 0;
+      margin-bottom: 10px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  input[type=text], input[type=password] {
+    width: 100%;
+  }
+}

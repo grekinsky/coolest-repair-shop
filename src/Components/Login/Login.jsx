@@ -27,7 +27,7 @@ class Login extends Component {
   render() {
     return (
       <div className={cx('Login')}>
-        <h1>Login page</h1>
+        <h1>Login</h1>
         <form onSubmit={(e) => {
           e.preventDefault();
           this.loginWithCredentials({
@@ -42,9 +42,8 @@ class Login extends Component {
               <dd><input type="text" ref={(el) => { this.email = el; }} /></dd>
               <dt>Password:</dt>
               <dd><input type="password" ref={(el) => { this.password = el; }} /></dd>
-              <dt />
-              <dd><input type="submit" defaultValue="Log in" /></dd>
             </dl>
+            <input type="submit" defaultValue="Log in" />
           </fieldset>
         </form>
         <p>

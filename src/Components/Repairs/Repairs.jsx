@@ -56,15 +56,15 @@ class Repairs extends Component {
     };
     return (
       <div className={cx('Repairs')}>
-        <h2>Repairs</h2>
+        <h1>Repairs</h1>
         <Filters />
         <table className={cx('Repairs-table')}>
           <thead>
             <tr>
               <th rowSpan={2}>Description</th>
               <th rowSpan={2}>Status</th>
-              <th colSpan={isAdmin ? 3 : 2}>Assigned</th>
-              <th rowSpan={2}>Actions</th>
+              <th colSpan={isAdmin ? 3 : 2} className={cx('Repairs-cell--center')}>Assigned</th>
+              <th rowSpan={2} className={cx('Repairs-cell--center')}>Actions</th>
             </tr>
             <tr>
               {showIfAdmin(<th>User</th>)}

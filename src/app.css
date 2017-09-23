@@ -1,7 +1,9 @@
 @import 'normalize.css';
 
 body {
+  background-color: rgba(0,0,0,.02);
   font-family: 'Source Sans Pro', sans-serif;
+  color: rgba(0,0,0,.7);
 }
 
 * {
@@ -20,12 +22,8 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
-#app {
-  padding: 30px;
-}
-
 a {
-  color: blue;
+  color: #009cff;
   text-decoration: none;
 
   &:hover {
@@ -33,6 +31,43 @@ a {
   }
 }
 
-a, button {
+a {
   cursor: pointer;
+}
+
+input[type=text],
+input[type=password],
+textarea {
+  background-color: white;
+  border: 1px solid rgba(0,0,0,.1);
+  padding: 10px 10px;
+  color: rgba(0,0,0,.7);
+  border-radius: 5px;
+  outline: none;
+}
+
+textarea {
+  resize: none;
+}
+
+button,
+input[type=submit],
+input[type=button] {
+  background-color: #378abf;
+  border: 1px solid rgba(0,0,0,.1);
+  padding: 10px 15px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  &:hover {
+    background-color: #3176a1;
+  }
+}
+
+blockquote {
+  padding: 0 1em;
+  border-left: 0.25em solid #dfe2e5;
+  margin: 0 0 26px;
+  font-size: 1.2em;
 }

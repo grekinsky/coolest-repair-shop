@@ -1,3 +1,46 @@
-.Dashboard {
-  color: gray;
+.Dashboard {}
+
+.Sidebar {
+  width: 200px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0,0,0,.02);
+}
+
+.Sidebar-nav {
+  padding: 15px 0 0;
+}
+
+.Sidebar-nav-item {
+  display: block;
+  padding: 8px 10px 8px 10px;
+  border-bottom: 1px solid white;
+  border-left: 3px solid rgba(0,0,0,.1);
+  text-decoration: none;
+  transition: background-color 350ms, border-color 350ms;
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(0,0,0,.02);
+  }
+}
+
+.Sidebar-nav-item--active {
+  border-left-color: #009cff;
+}
+
+.Dashboard-main {
+  padding: 0 20px;
+  margin-left: 200px;
+}
+
+.UserWelcome {
+  border-bottom: 1px solid rgba(0,0,0,.05);
+  padding: 15px;
+}
+
+.UserWelcome-msg {
+  display: block;
+  margin-bottom: 5px;
 }

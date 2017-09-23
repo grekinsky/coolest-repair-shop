@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { firebaseConnect } from 'react-redux-firebase';
+import classNames from 'classnames/bind';
 import repairActions from '../../../actions/repairActions';
+import styles from './RepairActions.css';
+
+const cx = classNames.bind(styles);
 
 class RepairActions extends Component {
   constructor(props) {
@@ -72,7 +76,7 @@ class RepairActions extends Component {
       >Reject</button></li>)
       : null;
     return (
-      <ul>
+      <ul className={cx('RepairActions')}>
         {btnAssignTo}
         {btnComplete}
         {btnIncomplete}

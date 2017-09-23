@@ -57,33 +57,35 @@ class Filters extends Component {
     // TODO: Remove hardcoded data from filters
     return (
       <div className={cx('Filters')}>
-        <NavLink
-          exact
-          to={{ pathname: '/repairs', search: qsAdd(q, { status: 'complete' }) }}
-          activeClassName="Filters-item--active"
-          isActive={(match, currentLocation) =>
-            match && qs.parse(currentLocation.search).status === 'complete'
-          }
-        > Complete </NavLink> |
-        <NavLink
-          exact
-          to={{ pathname: '/repairs', search: qsAdd(q, { status: 'incomplete' }) }}
-          activeClassName="Filters-item--active"
-          isActive={(match, currentLocation) =>
-            match && qs.parse(currentLocation.search).status === 'incomplete'
-          }
-        > Incomplete </NavLink> |
-        <NavLink
-          exact
-          to={{ pathname: '/repairs', search: qsRemove(q, 'status') }}
-          activeClassName="Filters-item--active"
-          isActive={(match, currentLocation) =>
-            match && !qs.parse(currentLocation.search).status
-          }
-        > All </NavLink>
+        <div className={cx('Filter-status')}>
+          <NavLink
+            exact
+            to={{ pathname: '/repairs', search: qsAdd(q, { status: 'complete' }) }}
+            activeClassName="Filters-item--active"
+            isActive={(match, currentLocation) =>
+              match && qs.parse(currentLocation.search).status === 'complete'
+            }
+          > Complete </NavLink> |
+          <NavLink
+            exact
+            to={{ pathname: '/repairs', search: qsAdd(q, { status: 'incomplete' }) }}
+            activeClassName="Filters-item--active"
+            isActive={(match, currentLocation) =>
+              match && qs.parse(currentLocation.search).status === 'incomplete'
+            }
+          > Incomplete </NavLink> |
+          <NavLink
+            exact
+            to={{ pathname: '/repairs', search: qsRemove(q, 'status') }}
+            activeClassName="Filters-item--active"
+            isActive={(match, currentLocation) =>
+              match && !qs.parse(currentLocation.search).status
+            }
+          > All </NavLink>
+        </div>
         {showIfAdmin(
-          <span>
-            {'| User: '}
+          <div className={cx('Filter-user')}>
+            {'User: '}
             <select
               onChange={
                 (e) => {
@@ -107,17 +109,19 @@ class Filters extends Component {
                 <option key={cKey} value={cKey}>{users[cKey].displayName}</option>
               )) : ''}
             </select>
-          </span>,
+          </div>,
         )}
-        <a
-          href=""
-          onClick={(e) => {
-            e.preventDefault();
-            this.showPopup();
-          }}
-        >
-          Filter by date
-        </a>
+        <div className={cx('Filter-date')}>
+          <a
+            href=""
+            onClick={(e) => {
+              e.preventDefault();
+              this.showPopup();
+            }}
+          >
+            Filter by date
+          </a>
+        </div>
         {this.state.filterByDateVisible
           ? (
             <Popup onClose={this.hidePopup}>

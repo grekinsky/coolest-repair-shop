@@ -17,7 +17,6 @@ class Signup extends Component {
   }
   async signUpWithCredentials({ displayName, email, password, rePassword }) {
     if (!(displayName && email && password && rePassword)) {
-      debugger; // eslint-disable-line
       console.error('All fields are required.'); // eslint-disable-line
       return false;
     }
@@ -39,8 +38,8 @@ class Signup extends Component {
   }
   render() {
     return (
-      <div className={cx('Signup')}>
-        <h1>Signup page</h1>
+      <div className={cx('Login')}>
+        <h1>Signup</h1>
         <form onSubmit={(e) => {
           e.preventDefault();
           this.signUpWithCredentials({
@@ -61,9 +60,8 @@ class Signup extends Component {
               <dd><input type="password" ref={(el) => { this.password = el; }} /></dd>
               <dt>Re-type password:</dt>
               <dd><input type="password" ref={(el) => { this.rePassword = el; }} /></dd>
-              <dt />
-              <dd><input type="submit" defaultValue="Sign up" /></dd>
             </dl>
+            <input type="submit" defaultValue="Sign up" />
           </fieldset>
         </form>
         <p>

@@ -22,10 +22,11 @@ class RepairDetail extends Component {
     const { repair, id } = this.props;
     return !isEmpty(repair) ? (
       <div className={cx('RepairDetail')}>
-        <h2>Repair Detail</h2>
+        <h1>Repair Detail</h1>
+        <blockquote>
+          <p>{repair.description}</p>
+        </blockquote>
         <dl>
-          <dt>Description</dt>
-          <dd>{repair.description}</dd>
           <dt>Created</dt>
           <dd>{dateTimeFormat(repair.timestamp)}</dd>
           <dt>Status</dt>
