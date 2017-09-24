@@ -6,12 +6,13 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import repairActions from '../../actions/repairActions';
+import commonActions from '../../actions/commonActions';
 import styles from './RepairAdd.css';
 import { userRole } from '../../Services/User';
 
 const cx = classNames.bind(styles);
 
-const RepairAdd = ({ actions, goTo }) => (
+const RepairAdd = ({ comActions, actions, goTo }) => (
   <div className={cx('RepairAdd')}>
     <h1>Add Repair</h1>
     <form onSubmit={async (e) => {
@@ -21,7 +22,7 @@ const RepairAdd = ({ actions, goTo }) => (
           await actions.add(this.description.value);
           goTo('/repairs');
         } catch (error) {
-          console.log(error); // eslint-disable-line
+          comActions.setError(error.message);
         }
       }
     }}
@@ -46,6 +47,9 @@ RepairAdd.propTypes = {
   actions: PropTypes.shape({
     add: PropTypes.func,
   }).isRequired,
+  comActions: PropTypes.shape({
+    setError: PropTypes.func,
+  }).isRequired,
   goTo: PropTypes.func.isRequired,
 };
 
@@ -58,6 +62,7 @@ const mapStateToProps = null;
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),
+  comActions: bindActionCreators(commonActions, dispatch),
   goTo: (path) => {
     dispatch(push(path));
   },

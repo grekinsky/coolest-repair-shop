@@ -6,6 +6,7 @@ import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import { User } from '../../models';
+import commonActions from '../../actions/commonActions';
 import userActions from '../../actions/userActions';
 import styles from './UserModify.css';
 import { userRole } from '../../Services/User';
@@ -14,7 +15,7 @@ const cx = classNames.bind(styles);
 
 class UserModify extends Component {
   render() {
-    const { id, actions, goTo, user } = this.props;
+    const { id, comActions, actions, goTo, user } = this.props;
     return (
       <div className={cx('UserModify')}>
         <h1>Modify User</h1>
@@ -29,7 +30,7 @@ class UserModify extends Component {
               );
               goTo('/users');
             } catch (error) {
-              console.log(error); // eslint-disable-line
+              comActions.setError(error.message);
             }
           }}
           >
@@ -67,6 +68,9 @@ UserModify.propTypes = {
   actions: PropTypes.shape({
     modify: PropTypes.func,
   }).isRequired,
+  comActions: PropTypes.shape({
+    setError: PropTypes.func,
+  }).isRequired,
   user: User,
   id: PropTypes.string,
   goTo: PropTypes.func.isRequired,
@@ -94,6 +98,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(userActions, dispatch),
+  comActions: bindActionCreators(commonActions, dispatch),
   goTo: (path) => {
     dispatch(push(path));
   },

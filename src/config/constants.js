@@ -2,6 +2,9 @@ export const ENV = window.env || 'development';
 
 // Error Types
 export const ERROR_GENERAL = 0;
+export const errorTypes = [
+  ERROR_GENERAL,
+];
 
 // Firebase config
 const fbConfigProduction = {

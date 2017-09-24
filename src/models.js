@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { errorTypes } from './config/constants';
 
 // User Model
 export const User = PropTypes.shape({
@@ -64,3 +65,8 @@ export const Assignment = PropTypes.objectOf( // repairId
 
 // Assignment Collection
 export const AssignmentList = PropTypes.objectOf(Assignment);
+
+export const ErrorModel = PropTypes.shape({
+  type: PropTypes.oneOf(errorTypes),
+  detail: PropTypes.string,
+});

@@ -5,13 +5,14 @@ import { compose, bindActionCreators } from 'redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import classNames from 'classnames/bind';
+import commonActions from '../../actions/commonActions';
 import userActions from '../../actions/userActions';
 import styles from './UserAdd.css';
 import { userRole } from '../../Services/User';
 
 const cx = classNames.bind(styles);
 
-const UserAdd = ({ actions, goTo }) => (
+const UserAdd = ({ comActions, actions, goTo }) => (
   <div className={cx('UserAdd')}>
     <h1>Add User</h1>
     <form onSubmit={async (e) => {
@@ -27,7 +28,7 @@ const UserAdd = ({ actions, goTo }) => (
         );
         goTo('/users');
       } catch (error) {
-        console.log(error); // eslint-disable-line
+        comActions.setError(error.message);
       }
     }}
     >
@@ -72,6 +73,9 @@ UserAdd.propTypes = {
   actions: PropTypes.shape({
     add: PropTypes.func,
   }).isRequired,
+  comActions: PropTypes.shape({
+    setError: PropTypes.func,
+  }).isRequired,
   goTo: PropTypes.func.isRequired,
 };
 
@@ -83,6 +87,7 @@ const mapStateToProps = null;
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(userActions, dispatch),
+  comActions: bindActionCreators(commonActions, dispatch),
   goTo: (path) => {
     dispatch(push(path));
   },

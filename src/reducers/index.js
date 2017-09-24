@@ -11,6 +11,7 @@ const error = (state = null, action) => {
         detail: action.errorDetail,
       };
     case 'CLEAR_ERROR':
+    case '@@router/LOCATION_CHANGE':
       return null;
     default:
       return state;

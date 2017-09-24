@@ -12,10 +12,10 @@ import RepairDetail from '../RepairDetail';
 import RepairAdd from '../RepairAdd';
 import RepairModify from '../RepairModify';
 import Users from '../Users';
-import UserDetail from '../UserDetail';
 import UserAdd from '../UserAdd';
 import UserModify from '../UserModify';
 import { userIsAuthenticated } from '../../Services/User';
+import { ErrorModel } from '../../models';
 
 const cx = classNames.bind(styles);
 
@@ -38,7 +38,7 @@ class Dashboard extends Component {
     this.props.firebase.logout();
   }
   render() {
-    const { role, displayName, showIfAdmin } = this.props;
+    const { role, displayName, showIfAdmin, error } = this.props;
     return (
       <div className={cx('Dashboard')}>
         <aside className={cx('Sidebar')}>
@@ -102,15 +102,6 @@ class Dashboard extends Component {
             />
             <Route
               exact
-              path="/users/:id"
-              render={({ match }) => (
-                <UserDetail
-                  id={match.params.id}
-                />
-              )}
-            />
-            <Route
-              exact
               path="/users/:id/edit"
               render={({ match }) => (
                 <UserModify
@@ -121,6 +112,9 @@ class Dashboard extends Component {
             <Redirect exact from="/" to="/repairs" />
           </Switch>
         </section>
+        {error ? (
+          <div className={cx('error-message')}>{error.detail}</div>
+        ) : null}
       </div>
     );
   }
@@ -133,19 +127,22 @@ Dashboard.propTypes = {
   role: PropTypes.string,
   displayName: PropTypes.string,
   showIfAdmin: PropTypes.func.isRequired,
+  error: ErrorModel,
 };
 
 Dashboard.defaultProps = {
   role: '',
   displayName: '',
+  error: null,
 };
 
 export default compose(
   userIsAuthenticated,
   firebaseConnect(),
-  connect(({ firebase: { profile: { role, displayName } } }) => ({
+  connect(({ firebase: { profile: { role, displayName } }, error }) => ({
     role,
     displayName,
     showIfAdmin: c => (role === 'admin' ? c : null),
+    error,
   })),
 )(Dashboard);

@@ -6,6 +6,7 @@ import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import repairActions from '../../actions/repairActions';
+import commonActions from '../../actions/commonActions';
 import styles from './RepairModify.css';
 import { userRole } from '../../Services/User';
 import { FlatRepair } from '../../models';
@@ -28,12 +29,12 @@ class RepairModify extends Component {
     this.showPopup = this.showPopup.bind(this);
   }
   async onSelectedForAssign(userId, date) {
-    const { actions: { assign } } = this.props;
+    const { actions: { assign }, comActions: { setError } } = this.props;
     const { assignTo } = this.state;
     try {
       await assign(assignTo, userId, date);
     } catch (e) {
-      console.log(e); // eslint-disable-line
+      setError(e.message);
     } finally {
       this.hidePopup();
     }
@@ -49,7 +50,7 @@ class RepairModify extends Component {
     });
   }
   render() {
-    const { id, actions, goTo, repair } = this.props;
+    const { id, comActions: { setError }, actions, goTo, repair } = this.props;
     return (
       !isEmpty(repair) ? (
         <div className={cx('RepairModify')}>
@@ -61,7 +62,7 @@ class RepairModify extends Component {
                 await actions.modify(id, this.description.value);
                 goTo(`/repairs/${id}`);
               } catch (error) {
-                console.log(error); // eslint-disable-line
+                setError(error.message);
               }
             }
           }}
@@ -112,6 +113,9 @@ class RepairModify extends Component {
 RepairModify.propTypes = {
   actions: PropTypes.shape({
     modify: PropTypes.func,
+  }).isRequired,
+  comActions: PropTypes.shape({
+    setError: PropTypes.func,
   }).isRequired,
   repair: FlatRepair,
   id: PropTypes.string,
@@ -164,6 +168,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),
+  comActions: bindActionCreators(commonActions, dispatch),
   goTo: (path) => {
     dispatch(push(path));
   },

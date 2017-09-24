@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { firebaseConnect, isEmpty, getFirebase } from 'react-redux-firebase';
+import { compose, bindActionCreators } from 'redux';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import classNames from 'classnames/bind';
 import moment from 'moment';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
@@ -16,6 +16,8 @@ import { getVisibleUsers } from '../../../Services/Filters';
 import { UserList } from '../../../models';
 import { DATE_FORMAT } from '../../../config/constants';
 import styles from './UserAssignment.css';
+import assignmentActions from '../../../actions/assignmentActions';
+import commonActions from '../../../actions/commonActions';
 
 const cx = classNames.bind(styles);
 
@@ -28,25 +30,18 @@ class UserAssignment extends Component {
       user: null,
       date: today.date,
       time: today.h,
-      error: '',
     };
-    this.isDateAvailable = date =>
-      new Promise((resolve, reject) => {
-        try {
-          const repairsRef = getFirebase().ref('assignments');
-          repairsRef.once('value', (snapshot) => {
-            const res = !snapshot.forEach(user =>
-              user.forEach(repair =>
-                repair.child('date').val() === date));
-            this.setState({
-              error: !res ? 'Date is unavailable' : '',
-            });
-            resolve(res);
-          });
-        } catch (e) {
-          reject(e);
-        }
-      });
+    const { comActions, assignActions } = props;
+    this.isDateAvailable = async (date) => {
+      try {
+        await assignActions.isDateAvailable(date);
+        comActions.clearError();
+        return true;
+      } catch (e) {
+        comActions.setError(e.message);
+        return false;
+      }
+    };
   }
   render() {
     const { users, onApply } = this.props;
@@ -60,10 +55,10 @@ class UserAssignment extends Component {
             <DayPickerInput
               value={dateFormat(this.state.date, DATE_FORMAT)}
               placeholder={DATE_FORMAT}
-              onDayChange={async (selectedDay) => {
+              onDayChange={(selectedDay) => {
                 const date = selectedDay.valueOf();
                 const d = setHoursToDate(date, this.state.time);
-                await this.isDateAvailable(d);
+                this.isDateAvailable(d);
                 this.setState({
                   date,
                 });
@@ -73,30 +68,29 @@ class UserAssignment extends Component {
           <div>
             <TimeInput
               value={this.state.time}
-              onChange={async (selectedTime) => {
+              onChange={(selectedTime) => {
                 const d = setHoursToDate(this.state.date, selectedTime);
-                await this.isDateAvailable(d);
+                this.isDateAvailable(d);
                 this.setState({
                   time: selectedTime,
                 });
               }}
             />
           </div>
-          <div style={{ color: this.state.error ? '#990000' : '#009900' }}>
-            {this.state.error}
-          </div>
           <div>
             <button
               onClick={async () => {
                 const date = setHoursToDate(this.state.date, this.state.time);
-                const isAvailable = await this.isDateAvailable(date);
-                if (!isAvailable) {
+                try {
+                  if (await this.isDateAvailable(date)) {
+                    onApply(
+                      this.state.user,
+                      date,
+                    );
+                  }
+                } catch (e) {
                   return false;
                 }
-                onApply(
-                  this.state.user,
-                  date,
-                );
                 return true;
               }}
             >Apply</button>
@@ -142,6 +136,13 @@ class UserAssignment extends Component {
 }
 
 UserAssignment.propTypes = {
+  comActions: PropTypes.shape({
+    setError: PropTypes.func,
+    clearError: PropTypes.func,
+  }).isRequired,
+  assignActions: PropTypes.shape({
+    isDateAvailable: PropTypes.func,
+  }).isRequired,
   users: UserList,
   onApply: PropTypes.func.isRequired,
 };
@@ -151,18 +152,28 @@ UserAssignment.defaultProps = {
   onApply: () => {},
 };
 
+const mapStateToProps = (
+  { firebase: { data: { userList } } },
+) => ({
+  users: userList,
+});
+
+const mapDispatchToProps = dispatch => ({
+  comActions: bindActionCreators(commonActions, dispatch),
+  assignActions: bindActionCreators(assignmentActions, dispatch),
+});
+
+const fbStoreKey = () => [
+  {
+    path: '/users',
+    storeAs: 'userList',
+  },
+];
+
 export default compose(
-  firebaseConnect(() => [
-    {
-      path: '/users',
-      storeAs: 'userList',
-    },
-  ]),
+  firebaseConnect(fbStoreKey),
   connect(
-    (
-      { firebase: { data: { userList } } },
-    ) => ({
-      users: userList,
-    }),
+    mapStateToProps,
+    mapDispatchToProps,
   ),
 )(UserAssignment);

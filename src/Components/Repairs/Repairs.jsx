@@ -9,6 +9,7 @@ import styles from './Repairs.css';
 import Popup from '../Shared/Popup';
 import { FlatRepairList } from '../../models';
 import repairActions from '../../actions/repairActions';
+import commonActions from '../../actions/commonActions';
 import UserAssignment from '../Shared/UserAssignment';
 import { getVisibleRepairs, flattenRepairs } from '../../Services/Filters';
 import Filters from './Filters';
@@ -27,12 +28,12 @@ class Repairs extends Component {
     this.showPopup = this.showPopup.bind(this);
   }
   async onSelectedForAssign(userId, date) {
-    const { actions: { assign } } = this.props;
+    const { actions: { assign }, comActions: { setError } } = this.props;
     const { assignTo } = this.state;
     try {
       await assign(assignTo, userId, date);
     } catch (e) {
-      console.log(e); // eslint-disable-line
+      setError(e.message);
     } finally {
       this.hidePopup();
     }
@@ -105,6 +106,9 @@ Repairs.propTypes = {
     approve: PropTypes.func,
     reject: PropTypes.func,
   }).isRequired,
+  comActions: PropTypes.shape({
+    setError: PropTypes.func,
+  }).isRequired,
   showIfAdmin: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   goTo: PropTypes.func.isRequired,
@@ -162,6 +166,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),
+  comActions: bindActionCreators(commonActions, dispatch),
   goTo: (path) => {
     dispatch(push(path));
   },
