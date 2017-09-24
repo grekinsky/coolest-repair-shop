@@ -9,7 +9,7 @@ import styles from './RepairDetail.css';
 import repairActions from '../../actions/repairActions';
 import { FlatRepair } from '../../models';
 import Comments from './Comments';
-import { flattenRepair } from '../../reducers';
+import { flattenRepair } from '../../Services/Filters';
 import { dateTimeFormat } from '../../util';
 
 const cx = classNames.bind(styles);

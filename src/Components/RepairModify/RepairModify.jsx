@@ -9,7 +9,7 @@ import repairActions from '../../actions/repairActions';
 import styles from './RepairModify.css';
 import { userRole } from '../../Services/User';
 import { FlatRepair } from '../../models';
-import { flattenRepair } from '../../reducers';
+import { flattenRepair } from '../../Services/Filters';
 import { dateTimeFormat } from '../../util';
 import RepairActions from '../Shared/RepairActions';
 import Popup from '../Shared/Popup';
@@ -123,6 +123,21 @@ RepairModify.defaultProps = {
   repair: null,
 };
 
+const fbStoreKey = ({ id }) => [
+  {
+    path: `/repairs/${id}`,
+    storeAs: 'repairDetail',
+  },
+  {
+    path: '/users',
+    storeAs: 'userList',
+  },
+  {
+    path: '/assignments',
+    storeAs: 'assignmentList',
+  },
+];
+
 const mapStateToProps = (
   { firebase: {
     profile: {
@@ -153,21 +168,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(push(path));
   },
 });
-
-const fbStoreKey = ({ id }) => [
-  {
-    path: `/repairs/${id}`,
-    storeAs: 'repairDetail',
-  },
-  {
-    path: '/users',
-    storeAs: 'userList',
-  },
-  {
-    path: '/assignments',
-    storeAs: 'assignmentList',
-  },
-];
 
 export default compose(
   userRole('admin'),

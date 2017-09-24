@@ -12,7 +12,7 @@ import {
   extractHoursFromDate,
   setHoursToDate,
 } from '../../../util';
-import { getVisibleUsers } from '../../../reducers';
+import { getVisibleUsers } from '../../../Services/Filters';
 import { UserList } from '../../../models';
 import { DATE_FORMAT } from '../../../config/constants';
 import styles from './UserAssignment.css';

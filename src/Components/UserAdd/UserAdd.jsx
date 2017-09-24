@@ -76,7 +76,6 @@ UserAdd.propTypes = {
 };
 
 UserAdd.defaultProps = {
-  mode: 'add',
   id: '',
 };
 

@@ -38,15 +38,14 @@ const userActions = {
         throw new Error(e);
       }
     },
-  modify: (displayName, email, password, role) =>
+  modify: (userId, displayName, role) =>
     async (dispatch, getState, getFirebase) => {
       const firebase = getFirebase();
+      if (!(displayName && userId && role)) {
+        throw new Error('All fields are required.');
+      }
       try {
-        await firebase.resetPassword({
-          email,
-          password,
-        });
-        await firebase.updateProfile({
+        await firebase.update(`users/${userId}`, {
           displayName,
           role,
         });

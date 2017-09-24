@@ -10,7 +10,7 @@ import Popup from '../Shared/Popup';
 import { FlatRepairList } from '../../models';
 import repairActions from '../../actions/repairActions';
 import UserAssignment from '../Shared/UserAssignment';
-import { getVisibleRepairs, flattenRepairs } from '../../reducers';
+import { getVisibleRepairs, flattenRepairs } from '../../Services/Filters';
 import Filters from './Filters';
 import RepairRow from './RepairRow';
 
