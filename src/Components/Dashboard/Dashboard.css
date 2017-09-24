@@ -1,4 +1,38 @@
-.Dashboard {}
+.Dashboard {
+  fieldset {
+    border: none;
+    padding: 20px 15px;
+    background-color: rgba(0,0,0,.02);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    dl {
+      margin-top: 0;
+      margin-bottom: 0;
+      dt {
+        margin-bottom: 5px;
+      }
+      dd {
+        margin-left: 0;
+        margin-bottom: 10px;
+        input, .label {
+          width: 100%;
+          max-width: 300px;
+        }
+        .label {
+          background-color: rgba(255,255,255,.5);
+          border: 1px solid rgba(0,0,0,.1);
+          padding: 10px 10px;
+          color: rgba(0,0,0,.5);
+          border-radius: 5px;
+          display: inline-block;
+        }
+      }
+    }
+    button, input[type=submit], input[type=button] {
+      margin-top: 10px;
+    }
+  }
+}
 
 .Sidebar {
   width: 200px;

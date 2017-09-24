@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { firebaseConnect } from 'react-redux-firebase';
 import classNames from 'classnames/bind';
 import styles from './UserModify.css';
 
@@ -10,4 +13,28 @@ const UserModify = () => (
   </div>
 );
 
-export default UserModify;
+UserModify.propTypes = {};
+
+UserModify.defaultProps = {};
+
+const mapStateToProps = (
+  {
+    firebase: {
+      profile: { role },
+    },
+  },
+) => ({
+  role,
+});
+
+const mapDispatchToProps = () => ({});
+
+const fbStoreKey = () => [];
+
+export default compose(
+  firebaseConnect(fbStoreKey),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+)(UserModify);

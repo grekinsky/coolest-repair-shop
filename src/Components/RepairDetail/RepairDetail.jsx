@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { firebaseConnect, populate, isEmpty } from 'react-redux-firebase';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { replace } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import styles from './RepairDetail.css';
@@ -32,7 +32,7 @@ class RepairDetail extends Component {
           <dt>Status</dt>
           <dd>{repair.status}</dd>
           <dt>Assigned to</dt>
-          <dd>{repair.user.displayName}</dd>
+          <dd>{repair.user}</dd>
           <dt>Assigned date</dt>
           <dd>{dateTimeFormat(repair.date)}</dd>
         </dl>
@@ -58,16 +58,11 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const populates = [
-  { child: 'user', root: 'users' },
-];
-
 export default compose(
   firebaseConnect(({ id }) => [
     {
       path: `/repairs/${id}`,
       storeAs: 'repairDetail',
-      populates,
     },
     {
       path: `/repairs/${id}/user`,
@@ -78,7 +73,7 @@ export default compose(
     (
       { firebase },
     ) => ({
-      repair: populate(firebase, 'repairDetail', populates),
+      repair: firebase.data.repairDetail,
       auth: firebase.auth,
       role: firebase.profile.role,
       repairUser: firebase.data.repairUser,

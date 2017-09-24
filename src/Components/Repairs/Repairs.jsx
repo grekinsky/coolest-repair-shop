@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { firebaseConnect } from 'react-redux-firebase';
+import { push } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import styles from './Repairs.css';
 import Popup from '../Shared/Popup';
@@ -47,7 +48,7 @@ class Repairs extends Component {
     });
   }
   render() {
-    const { repairs, showIfAdmin, isAdmin } = this.props;
+    const { repairs, showIfAdmin, isAdmin, goTo } = this.props;
     const getRepairs = () => {
       if (!repairs.length) return null;
       return repairs.map(repair =>
@@ -57,6 +58,12 @@ class Repairs extends Component {
     return (
       <div className={cx('Repairs')}>
         <h1>Repairs</h1>
+        {showIfAdmin(<button
+          className={cx('Repairs-addButton')}
+          onClick={() => {
+            goTo('/repairs/add');
+          }}
+        >New Repair</button>)}
         <Filters />
         <table className={cx('Repairs-table')}>
           <thead>
@@ -100,6 +107,7 @@ Repairs.propTypes = {
   }).isRequired,
   showIfAdmin: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  goTo: PropTypes.func.isRequired,
 };
 
 Repairs.defaultProps = {
@@ -110,6 +118,9 @@ Repairs.defaultProps = {
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),
+  goTo: (path) => {
+    dispatch(push(path));
+  },
 });
 
 const mapStateToProps = (

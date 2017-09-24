@@ -29,13 +29,13 @@ export const userIsNotAuthenticated = connectedReduxRedirect({
 });
 
 export const userRole = role => connectedReduxRedirect({
-  wrapperDisplayName: 'UserRole',
-  redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/forbidden',
+  wrapperDisplayName: 'userRole',
+  redirectPath: () => '/forbidden',
   allowRedirectBack: false,
   redirectAction: replace,
-  authenticatedSelector: ({ firebase: { auth } }) =>
-    (auth && auth.isLoaded && !auth.isEmpty) && auth.role === role,
-  authenticatingSelector: ({ firebase: { auth } }) =>
-    auth === undefined || !auth.isLoaded,
+  authenticatedSelector: ({ firebase: { auth, profile } }) =>
+    (auth && auth.isLoaded && !auth.isEmpty) && profile.role === role,
+  authenticatingSelector: ({ firebase: { auth, profile } }) =>
+    auth === undefined || !auth.isLoaded || profile === undefined || !profile.isLoaded,
   AuthenticatingComponent: Loading,
 });

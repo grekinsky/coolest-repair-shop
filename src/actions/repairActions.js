@@ -1,7 +1,7 @@
 // Repair actions
 
 const repairActions = {
-  setState: (id, action) =>
+  changeState: (id, action) =>
     async (dispatch, getState, getFirebase) => {
       const firebase = getFirebase();
       const actionStatus = {
@@ -37,7 +37,7 @@ const repairActions = {
   complete: id =>
     async (dispatch) => {
       try {
-        dispatch(await repairActions.setState(id, 'complete'));
+        dispatch(await repairActions.changeState(id, 'complete'));
       } catch (e) {
         console.log(e); // eslint-disable-line
       }
@@ -45,7 +45,7 @@ const repairActions = {
   incomplete: id =>
     async (dispatch) => {
       try {
-        dispatch(await repairActions.setState(id, 'incomplete'));
+        dispatch(await repairActions.changeState(id, 'incomplete'));
       } catch (e) {
         console.log(e); // eslint-disable-line
       }
@@ -53,7 +53,7 @@ const repairActions = {
   approve: id =>
     async (dispatch) => {
       try {
-        dispatch(await repairActions.setState(id, 'approve'));
+        dispatch(await repairActions.changeState(id, 'approve'));
       } catch (e) {
         console.log(e); // eslint-disable-line
       }
@@ -61,7 +61,21 @@ const repairActions = {
   reject: id =>
     async (dispatch) => {
       try {
-        dispatch(await repairActions.setState(id, 'reject'));
+        dispatch(await repairActions.changeState(id, 'reject'));
+      } catch (e) {
+        console.log(e); // eslint-disable-line
+      }
+    },
+  add: description =>
+    async (dispatch, getState, getFirebase) => {
+      const firebase = getFirebase();
+      try {
+        console.log('paso aqui'); // eslint-disable-line
+        await firebase.push('repairs', {
+          description,
+          status: 'created',
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+        });
       } catch (e) {
         console.log(e); // eslint-disable-line
       }
