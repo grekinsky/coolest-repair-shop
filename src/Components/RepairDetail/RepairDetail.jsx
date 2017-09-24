@@ -15,8 +15,8 @@ import { dateTimeFormat } from '../../util';
 const cx = classNames.bind(styles);
 
 class RepairDetail extends Component {
-  componentWillReceiveProps({ redirect, role, repairUser, auth }) {
-    if (role === 'user' && !isEmpty(repairUser) && auth.uid !== repairUser) {
+  componentWillReceiveProps({ redirect, role, repairUser, uid }) {
+    if (role === 'user' && !isEmpty(repairUser) && uid !== repairUser) {
       redirect('/forbidden');
     }
   }
