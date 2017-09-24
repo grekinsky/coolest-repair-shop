@@ -11,7 +11,7 @@ const commentActions = {
           timestamp: firebase.database.ServerValue.TIMESTAMP,
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
 };

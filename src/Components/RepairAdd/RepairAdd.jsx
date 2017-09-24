@@ -36,7 +36,7 @@ const RepairAdd = ({ actions, goTo }) => (
             />
           </dd>
         </dl>
-        <input type="submit" defaultValue="Save changes" />
+        <input type="submit" defaultValue="Save" />
       </fieldset>
     </form>
   </div>
@@ -54,15 +54,7 @@ RepairAdd.defaultProps = {
   id: '',
 };
 
-const mapStateToProps = (
-  {
-    firebase: {
-      profile: { role },
-    },
-  },
-) => ({
-  role,
-});
+const mapStateToProps = null;
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(repairActions, dispatch),

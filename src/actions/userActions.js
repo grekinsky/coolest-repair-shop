@@ -1,20 +1,41 @@
 // User actions
 
 const userActions = {
-  add: (displayName, email, password, role) =>
+  add: (displayName, email, password, rePassword, role = 'user', signIn) =>
     async (dispatch, getState, getFirebase) => {
       const firebase = getFirebase();
       try {
+        if (!(displayName && email && password && rePassword)) {
+          throw new Error('All fields are required.');
+        }
+        if (password !== rePassword) {
+          throw new Error('Passwords don\'t match');
+        }
         await firebase.createUser({
           email,
           password,
+          signIn,
+        },
+        {
+          displayName,
+          role,
         });
         await firebase.updateProfile({
           displayName,
           role,
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
+      }
+      return true;
+    },
+  login: (email, password) =>
+    async (dispatch, getState, getFirebase) => {
+      const firebase = getFirebase();
+      try {
+        await firebase.login({ email, password });
+      } catch (e) {
+        throw new Error(e);
       }
     },
   modify: (displayName, email, password, role) =>
@@ -30,7 +51,7 @@ const userActions = {
           role,
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   remove: userId =>
@@ -71,7 +92,7 @@ const userActions = {
         // Remove user
         await firebase.remove(`users/${userId}`);
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
 };

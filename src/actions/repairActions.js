@@ -16,7 +16,7 @@ const repairActions = {
           status: actionStatus[action],
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   assign: (repairId, user, date) =>
@@ -31,7 +31,7 @@ const repairActions = {
           date,
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   complete: id =>
@@ -39,7 +39,7 @@ const repairActions = {
       try {
         dispatch(await repairActions.changeState(id, 'complete'));
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   incomplete: id =>
@@ -47,7 +47,7 @@ const repairActions = {
       try {
         dispatch(await repairActions.changeState(id, 'incomplete'));
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   approve: id =>
@@ -55,7 +55,7 @@ const repairActions = {
       try {
         dispatch(await repairActions.changeState(id, 'approve'));
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   reject: id =>
@@ -63,7 +63,7 @@ const repairActions = {
       try {
         dispatch(await repairActions.changeState(id, 'reject'));
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   add: description =>
@@ -76,7 +76,7 @@ const repairActions = {
           timestamp: firebase.database.ServerValue.TIMESTAMP,
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   modify: (repairId, description) =>
@@ -87,7 +87,7 @@ const repairActions = {
           description,
         });
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
   remove: repairId =>
@@ -112,7 +112,7 @@ const repairActions = {
         // Remove repair
         await firebase.remove(`repairs/${repairId}`);
       } catch (e) {
-        console.log(e); // eslint-disable-line
+        throw new Error(e);
       }
     },
 };

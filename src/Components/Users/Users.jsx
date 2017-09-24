@@ -8,6 +8,7 @@ import classNames from 'classnames/bind';
 import styles from './Users.css';
 import { UserList } from '../../models';
 import UserRow from './UserRow';
+import { userRole } from '../../Services/User';
 
 const cx = classNames.bind(styles);
 
@@ -72,6 +73,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
+  userRole('admin'),
   firebaseConnect(fbStoreKey),
   connect(
     mapStateToProps,
