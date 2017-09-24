@@ -1,82 +1,150 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { push } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import repairActions from '../../actions/repairActions';
 import styles from './RepairModify.css';
 import { userRole } from '../../Services/User';
+import { FlatRepair } from '../../models';
+import { flattenRepair } from '../../reducers';
+import { dateTimeFormat } from '../../util';
+import RepairActions from '../Shared/RepairActions';
+import Popup from '../Shared/Popup';
+import UserAssignment from '../Shared/UserAssignment';
 
 const cx = classNames.bind(styles);
 
-const RepairModify = ({ isAdd, isUpdate, actions, goTo }) => (
-  <div className={cx('RepairModify')}>
-    <h1>
-      {isAdd('Create Repair')}
-      {isUpdate('Modify Repair')}
-    </h1>
-    <form onSubmit={async (e) => {
-      e.preventDefault();
-      if (this.description.value) {
-        try {
-          await actions.add(this.description.value);
-          goTo('/repairs');
-        } catch (error) {
-          console.log(error); // eslint-disable-line
-        }
-      }
-    }}
-    >
-      <fieldset>
-        <dl>
-          <dt>Description</dt>
-          <dd><input type="text" ref={(el) => { this.description = el; }} /></dd>
-        </dl>
-        <input type="submit" defaultValue="Save changes" />
-      </fieldset>
-      {isUpdate(
-        <fieldset>
-          <dl>
-            <dt>Status:</dt>
-            <dd><span className={cx('label')}>Assigned</span></dd>
-            <dt>Assigned to:</dt>
-            <dd><span className={cx('label')}>John Doe</span></dd>
-            <dt>Assigned date:</dt>
-            <dd><span className={cx('label')}>11/11/17 9:00AM</span></dd>
-          </dl>
-          <input type="button" defaultValue="Change Assignment" />
-        </fieldset>)}
-    </form>
-  </div>
-);
-
+class RepairModify extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      assignTo: '',
+    };
+    this.onSelectedForAssign = this.onSelectedForAssign.bind(this);
+    this.hidePopup = this.hidePopup.bind(this);
+    this.showPopup = this.showPopup.bind(this);
+  }
+  async onSelectedForAssign(userId, date) {
+    const { actions: { assign } } = this.props;
+    const { assignTo } = this.state;
+    try {
+      await assign(assignTo, userId, date);
+    } catch (e) {
+      console.log(e); // eslint-disable-line
+    } finally {
+      this.hidePopup();
+    }
+  }
+  showPopup(id) {
+    this.setState({
+      assignTo: id,
+    });
+  }
+  hidePopup() {
+    this.setState({
+      assignTo: '',
+    });
+  }
+  render() {
+    const { id, actions, goTo, repair } = this.props;
+    return (
+      !isEmpty(repair) ? (
+        <div className={cx('RepairModify')}>
+          <h1>Modify Repair</h1>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            if (this.description.value) {
+              try {
+                await actions.modify(id, this.description.value);
+                goTo(`/repairs/${id}`);
+              } catch (error) {
+                console.log(error); // eslint-disable-line
+              }
+            }
+          }}
+          >
+            <fieldset>
+              <dl>
+                <dt>Description</dt>
+                <dd>
+                  <input
+                    type="text"
+                    ref={(el) => { this.description = el; }}
+                    defaultValue={repair.description}
+                  />
+                </dd>
+              </dl>
+              <input type="submit" defaultValue="Save changes" />
+            </fieldset>
+            <fieldset>
+              <dl>
+                <dt>Status:</dt>
+                <dd><span className={cx('label')}>{repair.status}</span></dd>
+              </dl>
+              {repair.user ? (
+                <dl>
+                  <dt>Assigned to:</dt>
+                  <dd><span className={cx('label')}>{repair.user.displayName}</span></dd>
+                  <dt>Assigned date:</dt>
+                  <dd><span className={cx('label')}>{dateTimeFormat(repair.date)}</span></dd>
+                </dl>
+              ) : null}
+              <RepairActions id={repair.id} status={repair.status} assignTo={this.showPopup} />
+            </fieldset>
+          </form>
+          {this.state.assignTo
+            ? (
+              <Popup onClose={this.hidePopup} wide={false}>
+                <UserAssignment
+                  onApply={this.onSelectedForAssign}
+                />
+              </Popup>
+            ) : ''
+          }
+        </div>
+      ) : null
+    );
+  }
+}
 RepairModify.propTypes = {
   actions: PropTypes.shape({
-    add: PropTypes.func,
+    modify: PropTypes.func,
   }).isRequired,
-  mode: PropTypes.oneOf(['add', 'update']), // eslint-disable-line
-  isAdd: PropTypes.func.isRequired,
-  isUpdate: PropTypes.func.isRequired,
+  repair: FlatRepair,
+  id: PropTypes.string,
   goTo: PropTypes.func.isRequired,
 };
 
 RepairModify.defaultProps = {
-  mode: 'add',
+  id: '',
+  repair: null,
 };
 
 const mapStateToProps = (
-  {
-    firebase: {
-      profile: { role },
+  { firebase: {
+    profile: {
+      role,
     },
-  },
-  { mode },
+    data: {
+      repairDetail,
+      userList,
+      assignmentList,
+    },
+  } },
+  { id },
 ) => ({
   role,
-  isAdd: C => (mode === 'add' ? C : null),
-  isUpdate: C => (mode === 'update' ? C : null),
+  repair: flattenRepair(
+    repairDetail,
+    id,
+    userList,
+    assignmentList,
+  ),
+  repairUser: repairDetail ? repairDetail.user : '',
+  assignments: assignmentList,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -86,7 +154,20 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const fbStoreKey = () => [];
+const fbStoreKey = ({ id }) => [
+  {
+    path: `/repairs/${id}`,
+    storeAs: 'repairDetail',
+  },
+  {
+    path: '/users',
+    storeAs: 'userList',
+  },
+  {
+    path: '/assignments',
+    storeAs: 'assignmentList',
+  },
+];
 
 export default compose(
   userRole('admin'),

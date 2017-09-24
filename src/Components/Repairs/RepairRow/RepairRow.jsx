@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 import { User } from '../../../models';
 import { extractHoursFromDate, dateFormat, timeFormat } from '../../../util';
 import { DATE_FORMAT } from '../../../config/constants';
-import RepairActions from '../RepairActions';
+import RepairActions from '../../Shared/RepairActions';
 
 const RepairRow = ({ repair, showIfAdmin, assignTo }) => {
   const d = !isEmpty(repair.user) ? extractHoursFromDate(repair.date) : null;

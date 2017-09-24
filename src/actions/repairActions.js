@@ -70,12 +70,42 @@ const repairActions = {
     async (dispatch, getState, getFirebase) => {
       const firebase = getFirebase();
       try {
-        console.log('paso aqui'); // eslint-disable-line
         await firebase.push('repairs', {
           description,
           status: 'created',
           timestamp: firebase.database.ServerValue.TIMESTAMP,
         });
+      } catch (e) {
+        console.log(e); // eslint-disable-line
+      }
+    },
+  modify: (repairId, description) =>
+    async (dispatch, getState, getFirebase) => {
+      const firebase = getFirebase();
+      try {
+        await firebase.update(`repairs/${repairId}`, {
+          description,
+        });
+      } catch (e) {
+        console.log(e); // eslint-disable-line
+      }
+    },
+  remove: repairId =>
+    async (dispatch, getState, getFirebase) => {
+      const firebase = getFirebase();
+      try {
+        const repairsRef = firebase.ref('assignments');
+        await repairsRef.once('value', snapshot =>
+          snapshot.forEach((user) => {
+            if (user.hasChild(repairId)) {
+              const repair = user.child(repairId).getRef();
+              return repair.remove();
+            }
+            return false;
+          }),
+        );
+        await firebase.remove(`comments/${repairId}`);
+        await firebase.remove(`repairs/${repairId}`);
       } catch (e) {
         console.log(e); // eslint-disable-line
       }

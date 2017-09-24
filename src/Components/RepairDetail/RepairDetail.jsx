@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
-import { replace } from 'react-router-redux';
+import { replace, push } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import styles from './RepairDetail.css';
+import repairActions from '../../actions/repairActions';
 import { FlatRepair } from '../../models';
 import Comments from './Comments';
 import { flattenRepair } from '../../reducers';
@@ -20,10 +21,23 @@ class RepairDetail extends Component {
     }
   }
   render() {
-    const { repair, id } = this.props;
+    const { repair, id, showIfAdmin, goTo, actions } = this.props;
     return !isEmpty(repair) ? (
       <div className={cx('RepairDetail')}>
         <h1>Repair Detail</h1>
+        {showIfAdmin(<button
+          className={cx('Repairs-addButton')}
+          onClick={() => {
+            goTo(`/repairs/${id}/edit`);
+          }}
+        >Modify</button>)}
+        {showIfAdmin(<button
+          className={cx('Repairs-removeButton')}
+          onClick={async () => {
+            await actions.remove(id);
+            goTo('/repairs');
+          }}
+        >Delete</button>)}
         <blockquote>
           <p>{repair.description}</p>
         </blockquote>
@@ -48,9 +62,14 @@ class RepairDetail extends Component {
 }
 
 RepairDetail.propTypes = {
+  actions: PropTypes.shape({
+    remove: PropTypes.func,
+  }).isRequired,
   id: PropTypes.string.isRequired,
   repair: FlatRepair,
   redirect: PropTypes.func.isRequired,
+  goTo: PropTypes.func.isRequired,
+  showIfAdmin: PropTypes.func.isRequired,
 };
 
 RepairDetail.defaultProps = {
@@ -96,11 +115,16 @@ const mapStateToProps = (
   ),
   repairUser: repairDetail ? repairDetail.user : '',
   assignments: assignmentList,
+  showIfAdmin: c => (role === 'admin' ? c : null),
 });
 
 const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(repairActions, dispatch),
   redirect: (route) => {
     dispatch(replace(route));
+  },
+  goTo: (path) => {
+    dispatch(push(path));
   },
 });
 

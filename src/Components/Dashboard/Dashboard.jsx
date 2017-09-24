@@ -9,6 +9,7 @@ import qs from 'query-string';
 import styles from './Dashboard.css';
 import Repairs from '../Repairs';
 import RepairDetail from '../RepairDetail';
+import RepairAdd from '../RepairAdd';
 import RepairModify from '../RepairModify';
 import Users from '../Users';
 import UserDetail from '../UserDetail';
@@ -68,11 +69,7 @@ class Dashboard extends Component {
             <Route
               exact
               path="/repairs/add"
-              render={() => (
-                <RepairModify
-                  mode="add"
-                />
-              )}
+              component={RepairAdd}
             />
             <Route
               exact

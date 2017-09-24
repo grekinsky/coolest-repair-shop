@@ -69,7 +69,7 @@ export const getVisibleRepairs = (repairs, filters) => {
 export const flattenRepair = (r, id, users, assignments) => {
   if (isEmpty(r) || isEmpty(users)) return null;
   const user = users[r.user];
-  const assignment = r.user ? assignments[r.user] : null;
+  const assignment = r.user && assignments ? assignments[r.user] : null;
   const date = assignment && assignment[id]
     ? assignment[id].date
     : 0;

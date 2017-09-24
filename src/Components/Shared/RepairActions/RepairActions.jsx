@@ -27,10 +27,11 @@ class RepairActions extends Component {
       showIfAdmin,
       assignTo,
     } = this.props;
-    const btnAssignTo = (status === 'created')
+    const btnAssignTo = (status !== 'approved')
       ? showIfAdmin(<li><button
         key={`assign_${id}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           assignTo(id);
         }}
       >Assign</button></li>)
@@ -40,7 +41,8 @@ class RepairActions extends Component {
       || status === 'incomplete')
       ? (<li><button
         key={`complete_${id}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           complete(id);
         }}
       >Complete</button></li>)
@@ -52,7 +54,8 @@ class RepairActions extends Component {
       || status === 'incomplete')
       ? showIfAdmin(<li><button
         key={`incomplete_${id}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           incomplete(id);
         }}
       >Incomplete</button></li>)
@@ -61,7 +64,8 @@ class RepairActions extends Component {
       || status === 'rejected')
       ? showIfAdmin(<li><button
         key={`approve_${id}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           approve(id);
         }}
       >Approve</button></li>)
@@ -70,7 +74,8 @@ class RepairActions extends Component {
       || status === 'approved')
       ? showIfAdmin(<li><button
         key={`reject_${id}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           reject(id);
         }}
       >Reject</button></li>)

@@ -9,7 +9,7 @@ import styles from './Repairs.css';
 import Popup from '../Shared/Popup';
 import { FlatRepairList } from '../../models';
 import repairActions from '../../actions/repairActions';
-import UserAssignment from './UserAssignment';
+import UserAssignment from '../Shared/UserAssignment';
 import { getVisibleRepairs, flattenRepairs } from '../../reducers';
 import Filters from './Filters';
 import RepairRow from './RepairRow';
