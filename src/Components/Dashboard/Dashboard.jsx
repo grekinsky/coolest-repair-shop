@@ -13,6 +13,7 @@ import RepairAdd from '../RepairAdd';
 import RepairModify from '../RepairModify';
 import Users from '../Users';
 import UserDetail from '../UserDetail';
+import UserAdd from '../UserAdd';
 import UserModify from '../UserModify';
 import { userIsAuthenticated } from '../../Services/User';
 
@@ -85,7 +86,6 @@ class Dashboard extends Component {
               path="/repairs/:id/edit"
               render={({ match }) => (
                 <RepairModify
-                  mode="update"
                   id={match.params.id}
                 />
               )}
@@ -98,11 +98,7 @@ class Dashboard extends Component {
             <Route
               exact
               path="/users/add"
-              render={() => (
-                <UserModify
-                  mode="add"
-                />
-              )}
+              component={UserAdd}
             />
             <Route
               exact
@@ -118,7 +114,6 @@ class Dashboard extends Component {
               path="/users/:id/edit"
               render={({ match }) => (
                 <UserModify
-                  mode="update"
                   id={match.params.id}
                 />
               )}

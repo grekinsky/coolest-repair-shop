@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import classNames from 'classnames/bind';
-import styles from './UserModify.css';
+import styles from './UserAdd.css';
 
 const cx = classNames.bind(styles);
 
-const UserModify = () => (
-  <div className={cx('UserModify')}>
-    <h1>Modify User</h1>
+const UserAdd = () => (
+  <div className={cx('UserAdd')}>
+    <h1>Add User</h1>
   </div>
 );
 
-UserModify.propTypes = {};
+UserAdd.propTypes = {};
 
-UserModify.defaultProps = {};
+UserAdd.defaultProps = {};
 
 const mapStateToProps = (
   {
@@ -37,4 +37,4 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
-)(UserModify);
+)(UserAdd);

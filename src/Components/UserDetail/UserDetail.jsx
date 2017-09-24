@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 const UserDetail = () => (
   <div className={cx('UserDetail')}>
-    <h1>UserDetail</h1>
+    <h1>User Detail</h1>
   </div>
 );
 
