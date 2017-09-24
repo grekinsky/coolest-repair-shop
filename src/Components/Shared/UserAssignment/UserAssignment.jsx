@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import classNames from 'classnames/bind';
-import moment from 'moment';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import TimeInput from '../../Shared/TimeInput';
 import {
@@ -24,7 +23,7 @@ const cx = classNames.bind(styles);
 class UserAssignment extends Component {
   constructor(props) {
     super(props);
-    const today = extractHoursFromDate(moment());
+    const today = extractHoursFromDate(Date.now());
     this.state = {
       userInput: '',
       user: null,
@@ -47,11 +46,11 @@ class UserAssignment extends Component {
     const { users, onApply } = this.props;
     if (this.state.user) {
       return (
-        <div>
-          <div>
+        <div className={cx('UserAssignment')}>
+          <div className={cx('UserAssignment-name')}>
             {users[this.state.user].displayName}
           </div>
-          <div>
+          <div className={cx('UserAssignment-date')}>
             <DayPickerInput
               value={dateFormat(this.state.date, DATE_FORMAT)}
               placeholder={DATE_FORMAT}
@@ -65,7 +64,7 @@ class UserAssignment extends Component {
               }}
             />
           </div>
-          <div>
+          <div className={cx('UserAssignment-time')}>
             <TimeInput
               value={this.state.time}
               onChange={(selectedTime) => {
@@ -77,7 +76,7 @@ class UserAssignment extends Component {
               }}
             />
           </div>
-          <div>
+          <div className={cx('UserAssignment-button')}>
             <button
               onClick={async () => {
                 const date = setHoursToDate(this.state.date, this.state.time);

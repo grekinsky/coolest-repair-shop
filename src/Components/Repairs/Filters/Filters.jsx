@@ -8,7 +8,6 @@ import { compose } from 'redux';
 import qs from 'query-string';
 import { push } from 'react-router-redux';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import moment from 'moment';
 import Popup from '../../Shared/Popup';
 import {
   qsAdd,
@@ -29,8 +28,8 @@ class Filters extends Component {
     super(props);
     const { routing } = props;
     const q = qs.parse(routing.location.search);
-    const from = q.dateFrom ? extractHoursFromDate(q.dateFrom) : extractHoursFromDate(moment());
-    const to = q.dateTo ? extractHoursFromDate(q.dateTo) : extractHoursFromDate(moment());
+    const from = q.dateFrom ? extractHoursFromDate(q.dateFrom) : extractHoursFromDate(Date.now());
+    const to = q.dateTo ? extractHoursFromDate(q.dateTo) : extractHoursFromDate(Date.now());
     this.state = {
       filterByDateVisible: false,
       dateFrom: from.date,

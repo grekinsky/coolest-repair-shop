@@ -37,6 +37,7 @@ a {
 
 input[type=text],
 input[type=password],
+.DayPickerInput > input,
 textarea {
   background-color: white;
   border: 1px solid rgba(0,0,0,.1);

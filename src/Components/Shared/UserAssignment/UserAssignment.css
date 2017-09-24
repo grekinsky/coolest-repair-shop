@@ -29,3 +29,21 @@ ul.UserAssignment-list {
     }
   }
 }
+
+.UserAssignment-name {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.UserAssignment-date,
+.UserAssignment-time,
+.UserAssignment-button {
+  padding: 5px 0;
+}
+
+.UserAssignment-date,
+.UserAssignment-time,
+.UserAssignment-date > .DayPickerInput,
+.UserAssignment-date > .DayPickerInput > input {
+  width: 100%;
+}
