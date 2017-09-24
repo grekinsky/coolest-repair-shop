@@ -32,7 +32,7 @@ class RepairDetail extends Component {
           }}
         >Modify</button>)}
         {showIfAdmin(<button
-          className={cx('Repairs-removeButton')}
+          className={cx(['btnDanger', 'Repairs-removeButton'])}
           onClick={async () => {
             await actions.remove(id);
             goTo('/repairs');

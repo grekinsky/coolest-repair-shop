@@ -65,6 +65,13 @@ input[type=button] {
   }
 }
 
+.btnDanger {
+  background-color: #990000;
+  &:hover {
+    background-color: #880000;
+  }
+}
+
 blockquote {
   padding: 0 1em;
   border-left: 0.25em solid #dfe2e5;

@@ -94,6 +94,7 @@ const repairActions = {
     async (dispatch, getState, getFirebase) => {
       const firebase = getFirebase();
       try {
+        // Remove related assignments
         const repairsRef = firebase.ref('assignments');
         await repairsRef.once('value', snapshot =>
           snapshot.forEach((user) => {
@@ -104,7 +105,11 @@ const repairActions = {
             return false;
           }),
         );
+
+        // Remove related comments
         await firebase.remove(`comments/${repairId}`);
+
+        // Remove repair
         await firebase.remove(`repairs/${repairId}`);
       } catch (e) {
         console.log(e); // eslint-disable-line
