@@ -6,8 +6,9 @@ import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { replace } from 'react-router-redux';
 import classNames from 'classnames/bind';
 import styles from './RepairDetail.css';
-import { Repair } from '../../models';
+import { FlatRepair } from '../../models';
 import Comments from './Comments';
+import { flattenRepair } from '../../reducers';
 import { dateTimeFormat } from '../../util';
 
 const cx = classNames.bind(styles);
@@ -31,11 +32,15 @@ class RepairDetail extends Component {
           <dd>{dateTimeFormat(repair.timestamp)}</dd>
           <dt>Status</dt>
           <dd>{repair.status}</dd>
-          <dt>Assigned to</dt>
-          <dd>{repair.user}</dd>
-          <dt>Assigned date</dt>
-          <dd>{dateTimeFormat(repair.date)}</dd>
         </dl>
+        {repair.user ? (
+          <dl>
+            <dt>Assigned to</dt>
+            <dd>{repair.user.displayName}</dd>
+            <dt>Assigned date</dt>
+            <dd>{dateTimeFormat(repair.date)}</dd>
+          </dl>
+        ) : null}
         <Comments repairId={id} />
       </div>
     ) : null;
@@ -44,13 +49,54 @@ class RepairDetail extends Component {
 
 RepairDetail.propTypes = {
   id: PropTypes.string.isRequired,
-  repair: Repair,
+  repair: FlatRepair,
   redirect: PropTypes.func.isRequired,
 };
 
 RepairDetail.defaultProps = {
   repair: null,
 };
+
+const fbStoreKey = ({ id }) => [
+  {
+    path: `/repairs/${id}`,
+    storeAs: 'repairDetail',
+  },
+  {
+    path: '/users',
+    storeAs: 'userList',
+  },
+  {
+    path: '/assignments',
+    storeAs: 'assignmentList',
+  },
+];
+
+const mapStateToProps = (
+  { firebase: {
+    auth: { uid },
+    profile: {
+      role,
+    },
+    data: {
+      repairDetail,
+      userList,
+      assignmentList,
+    },
+  } },
+  { id },
+) => ({
+  uid,
+  role,
+  repair: flattenRepair(
+    repairDetail,
+    id,
+    userList,
+    assignmentList,
+  ),
+  repairUser: repairDetail ? repairDetail.user : '',
+  assignments: assignmentList,
+});
 
 const mapDispatchToProps = dispatch => ({
   redirect: (route) => {
@@ -59,23 +105,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
-  firebaseConnect(({ id }) => [
-    {
-      path: `/repairs/${id}`,
-      storeAs: 'repairDetail',
-    },
-    {
-      path: `/repairs/${id}/user`,
-      storeAs: 'repairUser',
-    },
-  ]),
+  firebaseConnect(fbStoreKey),
   connect(
-    (
-      { firebase },
-    ) => ({
-      repair: firebase.data.repairDetail,
-      auth: firebase.auth,
-      role: firebase.profile.role,
-      repairUser: firebase.data.repairUser,
-    }), mapDispatchToProps),
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(RepairDetail);

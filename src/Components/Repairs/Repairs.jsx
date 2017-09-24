@@ -116,12 +116,21 @@ Repairs.defaultProps = {
   users: {},
 };
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(repairActions, dispatch),
-  goTo: (path) => {
-    dispatch(push(path));
+const fbStoreKey = ({ filters, role }, firebase) => [
+  {
+    path: '/repairs',
+    storeAs: 'repairList',
+    queryParams: filters.user ? ['orderByChild=user', `equalTo=${filters.user}`] : null,
   },
-});
+  {
+    path: (role === 'user' ? `/assignments/${firebase._.authUid}` : '/assignments'),
+    storeAs: 'assignmentList',
+  },
+  {
+    path: '/users',
+    storeAs: 'userList',
+  },
+];
 
 const mapStateToProps = (
   {
@@ -151,21 +160,12 @@ const mapStateToProps = (
   showIfAdmin: c => (role === 'admin' ? c : null),
 });
 
-const fbStoreKey = ({ filters, role }, firebase) => [
-  {
-    path: '/repairs',
-    storeAs: 'repairList',
-    queryParams: filters.user ? ['orderByChild=user', `equalTo=${filters.user}`] : null,
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(repairActions, dispatch),
+  goTo: (path) => {
+    dispatch(push(path));
   },
-  {
-    path: (role === 'user' ? `/assignments/${firebase._.authUid}` : '/assignments'),
-    storeAs: 'assignmentList',
-  },
-  {
-    path: '/users',
-    storeAs: 'userList',
-  },
-];
+});
 
 export default compose(
   firebaseConnect(fbStoreKey),

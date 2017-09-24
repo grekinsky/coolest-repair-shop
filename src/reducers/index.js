@@ -66,6 +66,21 @@ export const getVisibleRepairs = (repairs, filters) => {
   return filteredData;
 };
 
+export const flattenRepair = (r, id, users, assignments) => {
+  if (isEmpty(r) || isEmpty(users)) return null;
+  const user = users[r.user];
+  const assignment = r.user ? assignments[r.user] : null;
+  const date = assignment && assignment[id]
+    ? assignment[id].date
+    : 0;
+  const repair = Object.assign({}, r, {
+    id,
+    user,
+    date,
+  });
+  return repair;
+};
+
 export const flattenRepairsByUser = (repairs, users, assignments) => {
   if (isEmpty(repairs) || isEmpty(users) || isEmpty(assignments)) return [];
   const flatRepairs = [];
@@ -75,16 +90,12 @@ export const flattenRepairsByUser = (repairs, users, assignments) => {
     return Object.keys(a).map((rkey) => {
       const r = repairs[rkey];
       if (isEmpty(r)) return null;
-      const user = users[r.user];
-      const date = a && a[rkey]
-        ? a[rkey].date
-        : 0;
-      const repair = Object.assign({}, r, {
-        id: rkey,
-        user,
-        date,
-      });
-      flatRepairs.push(repair);
+      flatRepairs.push(flattenRepair(
+        r,
+        rkey,
+        users,
+        assignments,
+      ));
       return false;
     });
   });
@@ -97,17 +108,12 @@ export const flattenAllRepairs = (repairs, users, assignments) => {
   Object.keys(repairs).map((rkey) => {
     const r = repairs[rkey];
     if (isEmpty(r)) return null;
-    const user = users[r.user];
-    const assignment = assignments[r.user];
-    const date = assignment && assignment[rkey]
-      ? assignment[rkey].date
-      : 0;
-    const repair = Object.assign({}, r, {
-      id: rkey,
-      user,
-      date,
-    });
-    flatRepairs.push(repair);
+    flatRepairs.push(flattenRepair(
+      r,
+      rkey,
+      users,
+      assignments,
+    ));
     return false;
   });
   return flatRepairs;

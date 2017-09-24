@@ -36,22 +36,18 @@ const RepairModify = ({ isAdd, isUpdate, actions, goTo }) => (
         </dl>
         <input type="submit" defaultValue="Save changes" />
       </fieldset>
-      <fieldset>
-        <dl>
-          <dt>Status:</dt>
-          <dd><span className={cx('label')}>Assigned</span></dd>
-        </dl>
-        {isUpdate(
-          <div>
-            <dl>
-              <dt>Assigned to:</dt>
-              <dd><span className={cx('label')}>John Doe</span></dd>
-              <dt>Assigned date:</dt>
-              <dd><span className={cx('label')}>11/11/17 9:00AM</span></dd>
-            </dl>
-            <input type="button" defaultValue="Change Assignment" />
-          </div>)}
-      </fieldset>
+      {isUpdate(
+        <fieldset>
+          <dl>
+            <dt>Status:</dt>
+            <dd><span className={cx('label')}>Assigned</span></dd>
+            <dt>Assigned to:</dt>
+            <dd><span className={cx('label')}>John Doe</span></dd>
+            <dt>Assigned date:</dt>
+            <dd><span className={cx('label')}>11/11/17 9:00AM</span></dd>
+          </dl>
+          <input type="button" defaultValue="Change Assignment" />
+        </fieldset>)}
     </form>
   </div>
 );
