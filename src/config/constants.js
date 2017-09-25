@@ -13,16 +13,16 @@ const fbConfigProduction = {
   databaseURL: 'https://toptal-react-academy.firebaseio.com',
   projectId: 'toptal-react-academy',
 };
-
+/*
 const fbConfigDevelopment = {
   apiKey: 'AIzaSyArYwTEoR1giF3vwl8skL8Gj3NMrPbvT88',
   authDomain: 'toptal-react-academy-dev.firebaseapp.com',
   databaseURL: 'https://toptal-react-academy-dev.firebaseio.com',
   projectId: 'toptal-react-academy-dev',
 };
-
+*/
 const fbConfig = {
-  development: fbConfigDevelopment,
+  development: fbConfigProduction,
   production: fbConfigProduction,
 };
 
