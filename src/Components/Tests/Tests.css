@@ -1,0 +1,25 @@
+.Tests {}
+
+.json-pretty {
+  background-color: white;
+  border: 1px solid rgba(0,0,0,.1);
+  padding: 10px 10px;
+  color: rgba(0,0,0,.7);
+  border-radius: 5px;
+  outline: none;
+  display: block;
+  min-height: 150px;
+  overflow-x: auto;
+  margin-right: 200px;
+}
+
+nav.Tests-list {
+  float: right;
+  width: 200px;
+  padding: 20px;
+}
+
+.Test-item {
+  margin-bottom: 15px;
+  display: block;
+}

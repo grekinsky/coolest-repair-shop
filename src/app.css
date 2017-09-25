@@ -33,6 +33,7 @@ a {
 
 a {
   cursor: pointer;
+  outline: none;
 }
 
 input[type=text],

@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { create } from 'axios';
 import { ENV, getFbConfig } from '../config/constants';
 
-export default class RepairsApi {
+class RepairsApi {
   constructor(options) {
     this.instance = create({
       baseURL: 'https://toptal-react-academy.firebaseio.com',
@@ -25,7 +25,15 @@ export default class RepairsApi {
     });
     this.config = (options && options.config) || getFbConfig(ENV);
     this.firebase = (options && options.fb) || this.getFirebase();
+    this.getFirebase = this.getFirebase.bind(this);
+    this.getFirebaseToken = this.getFirebaseToken.bind(this);
+    this.getUsers = this.getUsers.bind(this);
+    this.getRepairs = this.getRepairs.bind(this);
+    this.addRepair = this.addRepair.bind(this);
+    this.modifyRepair = this.modifyRepair.bind(this);
+    this.deleteRepair = this.deleteRepair.bind(this);
   }
+
   getFirebase() {
     if (this.firebase) return this.firebase;
     // If already initialized globally, return instance
@@ -34,6 +42,7 @@ export default class RepairsApi {
     this.firebase = firebase.initializeApp(this.config);
     return this.firebase;
   }
+
   async getFirebaseToken() {
     const f = this.getFirebase();
     try {
@@ -44,17 +53,6 @@ export default class RepairsApi {
       throw new Error(e);
     }
   }
-  async login(email, password) {
-    const f = this.getFirebase();
-    const res = await f.auth().signInWithEmailAndPassword(email, password);
-    return res;
-  }
-  async createUser(email, password) {
-    const f = this.getFirebase();
-    const res = await f.auth().createUserWithEmailAndPassword(email, password);
-    return res;
-  }
-
 
   async getUsers() {
     const request = {
@@ -68,44 +66,6 @@ export default class RepairsApi {
       throw new Error(e);
     }
   }
-  async getUser(id) {
-    const request = {
-      method: 'get',
-      url: `/users/${id}.json`,
-    };
-    try {
-      const res = await this.instance(request);
-      return res.data;
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
-  async modifyUser(id, data) {
-    const request = {
-      method: 'patch',
-      url: `/users/${id}.json`,
-      data,
-    };
-    try {
-      const res = await this.instance(request);
-      return res.data;
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
-  async removeUser(id) {
-    const request = {
-      method: 'delete',
-      url: `/users/${id}.json`,
-    };
-    try {
-      const res = await this.instance(request);
-      return res.data;
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
-
 
   async getRepairs() {
     const request = {
@@ -119,6 +79,7 @@ export default class RepairsApi {
       throw new Error(e);
     }
   }
+
   async getRepair(id) {
     const request = {
       method: 'get',
@@ -131,11 +92,17 @@ export default class RepairsApi {
       throw new Error(e);
     }
   }
-  async modifyRepair(id, data) {
+
+  async addRepair(data) {
+    const f = this.getFirebase();
     const request = {
-      method: 'patch',
-      url: `/repairs/${id}.json`,
-      data,
+      method: 'post',
+      url: '/repairs.json',
+      data: {
+        description: data.description,
+        status: 'created',
+        timestamp: f.database.ServerValue.TIMESTAMP,
+      },
     };
     try {
       const res = await this.instance(request);
@@ -144,10 +111,27 @@ export default class RepairsApi {
       throw new Error(e);
     }
   }
-  async removeRepair(id) {
+
+  async modifyRepair(data) {
+    const request = {
+      method: 'patch',
+      url: `/repairs/${data.id}.json`,
+      data: {
+        description: data.description,
+      },
+    };
+    try {
+      const res = await this.instance(request);
+      return res.data;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async deleteRepair(data) {
     const request = {
       method: 'delete',
-      url: `/repairs/${id}.json`,
+      url: `/repairs/${data.id}.json`,
     };
     try {
       const res = await this.instance(request);
@@ -157,3 +141,5 @@ export default class RepairsApi {
     }
   }
 }
+
+export default RepairsApi;

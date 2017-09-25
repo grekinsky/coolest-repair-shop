@@ -14,6 +14,7 @@ import RepairModify from '../RepairModify';
 import Users from '../Users';
 import UserAdd from '../UserAdd';
 import UserModify from '../UserModify';
+import Tests from '../Tests';
 import { userIsAuthenticated } from '../../Services/User';
 import { ErrorModel } from '../../models';
 
@@ -52,6 +53,7 @@ class Dashboard extends Component {
           <nav className={cx('Sidebar-nav')}>
             <SidebarNavItem to="/repairs">Repairs</SidebarNavItem>
             {showIfAdmin(<SidebarNavItem to="/users">Users</SidebarNavItem>)}
+            {showIfAdmin(<SidebarNavItem to="/tests">Functional Tests</SidebarNavItem>)}
           </nav>
         </aside>
         <section className={cx('Dashboard-main')}>
@@ -108,6 +110,11 @@ class Dashboard extends Component {
                   id={match.params.id}
                 />
               )}
+            />
+            <Route
+              exact
+              path="/tests"
+              component={Tests}
             />
             <Redirect exact from="/" to="/repairs" />
           </Switch>
